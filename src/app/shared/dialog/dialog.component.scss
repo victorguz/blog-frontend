@@ -1,0 +1,114 @@
+.card {
+  --color-success: #2dce89;
+  --color-info: #3150ec;
+  --color-warning: #ffc409;
+  --color-danger: #e72a2a;
+
+  --color-success: #2dce89;
+  --color-info: #3150ec;
+  --color-warning: #ffc409;
+  --color-danger: #e72a2a;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: fit-content;
+  background-color: white;
+  padding-top: 150px;
+  text-align: center;
+  max-width: 500px;
+
+  @media screen and (max-width: 768px) {
+    max-width: none;
+    width: 90vw;
+    padding-top: 100px;
+  }
+
+  .icon {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 270px;
+    width: 270px;
+    min-height: 270px;
+    min-width: 270px;
+    border-radius: 1000px;
+    background-color: white;
+
+    .back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 270px;
+      width: 270px;
+      min-height: 270px;
+      min-width: 270px;
+      border-radius: 1000px;
+      mat-icon {
+        font-size: 240px;
+      }
+
+      &.success {
+        background-color: transparentize($color: #2dce89, $amount: 0.8);
+        mat-icon {
+          color: #2dce89;
+        }
+      }
+
+      &.info {
+        background-color: transparentize($color: #3150ec, $amount: 0.8);
+        mat-icon {
+          color: #3150ec;
+        }
+      }
+
+      &.warning {
+        background-color: transparentize($color: #ffc409, $amount: 0.8);
+        mat-icon {
+          color: #ffc409;
+        }
+      }
+
+      &.deletion,
+      &.error {
+        background-color: transparentize($color: #e72a2a, $amount: 0.8);
+        mat-icon {
+          color: #e72a2a;
+        }
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      height: 200px;
+      width: 200px;
+      min-height: 200px;
+      min-width: 200px;
+
+      .back {
+        height: 200px;
+        width: 200px;
+        min-height: 200px;
+        min-width: 200px;
+
+        mat-icon {
+          font-size: 190px;
+        }
+      }
+    }
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

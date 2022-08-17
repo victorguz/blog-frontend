@@ -1,0 +1,38 @@
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+.row {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.btn {
+  border-radius: $button-radius;
+  box-shadow: none !important;
+  font-weight: 600;
+  padding: 7px 23px;
+
+  &:hover,
+  &:active {
+    background: #0000001c;
+    border-color: transparent;
+  }
+
+  &.btn-primary {
+    &:hover,
+    &:active {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: $button-shadow;
+    }
+  }
+
+  &.btn-outline-primary {
+    background: transparent;
+    color: $primary-active;
+    border-color: transparent;
+    box-shadow: $button-shadow;
+
+    &:hover,
+    &:active {
+      box-shadow: none;
+    }
+  }
+}
