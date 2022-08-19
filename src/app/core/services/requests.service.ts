@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { getBasicError, getErrorMessage, getToken } from './functions.service';
+import { getToken } from './functions.service';
 import { BasicResponse } from '../models/basic-response.model';
-import { isIn, isNotEmptyObject, isObject } from 'class-validator';
+import { isEmpty, isNotEmptyObject, isObject, isURL } from 'class-validator';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { ContentType, RequestMethod } from '../constants.config';
+import { HttpBody } from '../../shared/interfaces/shared.interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RequestsService {
-  constructor(private _http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   private isAllowedDomain(domain: string, headers: any = undefined) {
     const allowedDomain = environment.allowedDomains.find((dom) => {
@@ -20,194 +23,97 @@ export class RequestsService {
     return headers;
   }
 
-  async get(
-    url: string,
-    params: any = {},
-    headers: any = undefined
-  ): Promise<BasicResponse> {
-    try {
-      if (url) {
-        let paramsUrl = '';
-        headers = this.isAllowedDomain(url, headers);
-        headers = new HttpHeaders(headers);
-        // Recorremos los parametros para convertirlos a parametros de url
-        for (const key in params) {
-          if (Object.prototype.hasOwnProperty.call(params, key)) {
-            const value = params[key];
-            paramsUrl += `${key}=${value}&`;
-          }
-        }
-        const result = await this._http
-          .get(`${url}?${paramsUrl.toString()}`, {
-            headers: headers,
-          })
-          .toPromise();
-        return new BasicResponse(true, 'Request success', result);
-      } else {
-        return new BasicResponse(
-          false,
-          'No se puede hacer el request a una url vacía'
-        );
-      }
-    } catch (error) {
-      return new BasicResponse(
-        false,
-        getErrorMessage(error),
-        undefined,
-        getBasicError(error)
-      );
+  private validateUrl(url: string) {
+    if (isEmpty(url) || isURL(url)) {
+      throw new Error('No se puede hacer el request a una url vacía');
     }
   }
 
-  async delete(
-    url: string,
-    params: any = {},
-    headers: any = undefined
-  ): Promise<BasicResponse> {
-    try {
-      if (url) {
-        headers = this.isAllowedDomain(url, headers);
-        let paramsUrl = '';
-        headers = new HttpHeaders(headers);
-        // Recorremos los parametros para convertirlos a parametros de url
-        for (const key in params) {
-          if (Object.prototype.hasOwnProperty.call(params, key)) {
-            const value = params[key];
-            paramsUrl += `${key}=${value}&`;
-          }
-        }
-        const result = await this._http
-          .delete(`${url}?${paramsUrl.toString()}`, {
-            headers: headers,
-          })
-          .toPromise();
-        return new BasicResponse(true, 'Request success', result);
-      } else {
-        return new BasicResponse(
-          false,
-          'No se puede hacer el request a una url vacía'
-        );
+  get(body: HttpBody): Observable<BasicResponse> {
+    this.validateUrl(body.url);
+    let paramsUrl = '';
+    body.headers = this.isAllowedDomain(body.url, body.headers);
+    body.headers = new HttpHeaders(body.headers);
+    // Recorremos los parametros para convertirlos a parametros de url
+    for (const key in body.params) {
+      if (Object.prototype.hasOwnProperty.call(body.params, key)) {
+        const value = body.params[key];
+        paramsUrl += `${key}=${value}&`;
       }
-    } catch (error) {
-      return new BasicResponse(
-        false,
-        getErrorMessage(error),
-        undefined,
-        getBasicError(error)
-      );
     }
+    return this.http.get<BasicResponse>(`${body.url}?${paramsUrl.toString()}`, {
+      headers: body.headers,
+    });
   }
 
-  async postLikeFormUrlEncoded(
-    url: string,
-    params: any,
-    headers: any = undefined,
-    method:
-      | RequestMethod.POST
-      | RequestMethod.PATCH
-      | RequestMethod.PUT = RequestMethod.POST
-  ): Promise<BasicResponse> {
-    try {
-      if (url) {
-        headers = this.isAllowedDomain(url, headers);
-        headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        const paramsUrlEncoded = new URLSearchParams();
-        headers = new HttpHeaders(headers);
-        for (const key in params) {
-          if (Object.prototype.hasOwnProperty.call(params, key)) {
-            const element = params[key];
-            paramsUrlEncoded.append(key, element);
-          }
-        }
-        let result: any;
-        switch (method) {
-          case RequestMethod.POST:
-            result = await this._http
-              .post(url, paramsUrlEncoded.toString(), { headers: headers })
-              .toPromise();
-            break;
-          case RequestMethod.PATCH:
-            result = await this._http
-              .patch(url, paramsUrlEncoded.toString(), { headers: headers })
-              .toPromise();
-            break;
-          case RequestMethod.PUT:
-            result = await this._http
-              .put(url, paramsUrlEncoded.toString(), { headers: headers })
-              .toPromise();
-            break;
-        }
-        return new BasicResponse(true, 'Request success', result);
-      } else {
-        return new BasicResponse(
-          false,
-          'No se puede hacer el request a una url vacía'
-        );
+  delete(body: HttpBody): Observable<BasicResponse> {
+    this.validateUrl(body.url);
+    body.headers = this.isAllowedDomain(body.url, body.headers);
+    let paramsUrl = '';
+    body.headers = new HttpHeaders(body.headers);
+    // Recorremos los parametros para convertirlos a parametros de url
+    for (const key in body.params) {
+      if (Object.prototype.hasOwnProperty.call(body.params, key)) {
+        const value = body.params[key];
+        paramsUrl += `${key}=${value}&`;
       }
-    } catch (error) {
-      return new BasicResponse(
-        false,
-        getErrorMessage(error),
-        undefined,
-        getBasicError(error)
-      );
     }
+    return this.http.delete<BasicResponse>(
+      `${body.url}?${paramsUrl.toString()}`,
+      {
+        headers: body.headers,
+      }
+    );
   }
 
-  async postLikeJSON(
-    url: string,
-    params: any,
-    headers: any = undefined,
-    method:
-      | RequestMethod.POST
-      | RequestMethod.PATCH
-      | RequestMethod.PUT = RequestMethod.POST
-  ): Promise<BasicResponse> {
-    try {
-      if (url) {
-        headers = this.isAllowedDomain(url, headers);
-        headers['Content-Type'] = 'application/json';
-        headers = new HttpHeaders(headers);
-        let result: any;
-        switch (method) {
-          case RequestMethod.POST:
-            result = await this._http
-              .post(url, params, { headers: headers })
-              .toPromise();
-            break;
-          case RequestMethod.PATCH:
-            result = await this._http
-              .patch(url, params, { headers: headers })
-              .toPromise();
-            break;
-          case RequestMethod.PUT:
-            result = await this._http
-              .put(url, params, { headers: headers })
-              .toPromise();
-            break;
+  post(body: HttpBody, contentType: ContentType = ContentType.JSON) {
+    return this.postByMethod(body, contentType, RequestMethod.POST);
+  }
+
+  patch(body: HttpBody, contentType: ContentType = ContentType.JSON) {
+    return this.postByMethod(body, contentType, RequestMethod.PATCH);
+  }
+
+  put(body: HttpBody, contentType: ContentType = ContentType.JSON) {
+    return this.postByMethod(body, contentType, RequestMethod.PUT);
+  }
+
+  private postByMethod(
+    body: HttpBody,
+    contentType: ContentType,
+    method: RequestMethod.POST | RequestMethod.PATCH | RequestMethod.PUT
+  ): Observable<BasicResponse> {
+    this.validateUrl(body.url);
+    body.headers = this.isAllowedDomain(body.url, body.headers);
+    body.headers['Content-Type'] = contentType;
+    body.headers = new HttpHeaders(body.headers);
+    if (contentType == ContentType.FORM) {
+      const paramsUrlEncoded = new URLSearchParams();
+      for (const key in body.params) {
+        if (Object.prototype.hasOwnProperty.call(body.params, key)) {
+          const element = body.params[key];
+          paramsUrlEncoded.append(key, element);
         }
-        return new BasicResponse(true, 'Request success', result);
-      } else {
-        return new BasicResponse(
-          false,
-          'No se puede hacer el request a una url vacía'
-        );
       }
-    } catch (error) {
-      return new BasicResponse(
-        false,
-        getErrorMessage(error),
-        undefined,
-        getBasicError(error)
-      );
+      body.params = paramsUrlEncoded.toString();
+    }
+    switch (method) {
+      case RequestMethod.POST:
+        return this.http.post<BasicResponse>(body.url, body.params, {
+          headers: body.headers,
+        });
+
+      case RequestMethod.PATCH:
+        return this.http.patch<BasicResponse>(body.url, body.params, {
+          headers: body.headers,
+        });
+
+      case RequestMethod.PUT:
+        return this.http.put<BasicResponse>(body.url, body.params, {
+          headers: body.headers,
+        });
     }
   }
 }
 
-export enum RequestMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
-}
+

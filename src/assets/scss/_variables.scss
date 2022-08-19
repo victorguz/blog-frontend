@@ -1,12 +1,19 @@
 $primary: #eaddf4 !default;
 $primary-active: #be7abf !default;
-// $secondary: #eaddf4;
-$success: #198754;
-$info: #0dcaf0;
+$secondary: #dadadad8;
+$success: #2dce89;
+$info: #11cdef;
 $warning: #ffc107;
-$danger: #dc3545;
+$danger: #f5365c;
 $light: #f8f9fa;
 $dark: #212529;
 
 $button-radius: 50px !default;
 $button-shadow: 14px 13px 27px 0px #00000040 !important;
+$default-radius: 20px;
+
+:root {
+  --default-radius: 20px;
+  --button-shadow: 14px 13px 27px 0px #00000040 !important;
+  --button-radius: 50px;
+}

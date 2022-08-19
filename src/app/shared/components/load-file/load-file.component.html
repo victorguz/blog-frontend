@@ -1,0 +1,231 @@
+<div class="d-flex align-items-center gap-3" *ngIf="apariencia == 'normal'">
+  <button
+    class="btn btn-primary text-nowrap"
+    type="button"
+    (click)="inputFile.click()"
+    *ngIf="!file && !loadedFile"
+    [disabled]="disableUpload"
+  >
+    {{ textoCargar ? textoCargar : "Select file" }}
+  </button>
+
+  <ng-container *ngIf="!file && loadedFile && loadedFile.id">
+    <section class="w-100 d-flex align-items-center justify-content-between">
+      <button
+        type="button"
+        class="btn btn-secondary text-nowrap"
+        (click)="abrirArchivo()"
+      >
+        {{
+          loadedFile.nombreArchivo
+            ? loadedFile.nombreArchivo.length > 20
+              ? loadedFile.nombreArchivo.substring(0, 20) +
+                "..." +
+                loadedFile.nombreArchivo.substring(
+                  loadedFile.nombreArchivo.length - 4,
+                  loadedFile.nombreArchivo.length
+                )
+              : loadedFile.nombreArchivo
+            : "Archivo seleccionado"
+        }}
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        (click)="borrarArchivo(inputFile)"
+        class="bg-white"
+        *ngIf="downloadIcon"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="file">
+    <section class="w-100 d-flex align-items-center justify-content-between">
+      <button class="btn btn-secondary text-nowrap" (click)="abrirArchivo()">
+        {{
+          file.name
+            ? file.name.length > 20
+              ? file.name.substring(0, 20) +
+                "..." +
+                file.name.substring(file.name.length - 4, file.name.length)
+              : file.name
+            : textoDescargar
+            ? textoDescargar
+            : "Archivo seleccionado"
+        }}
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        (click)="borrarArchivo(inputFile)"
+        class="bg-white"
+        *ngIf="deleteIcon"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </section>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="apariencia == 'icon'">
+  <button
+    mat-icon-button
+    [matTooltip]="textoCargar"
+    matTooltipPosition="right"
+    matTooltipHideDelay="500"
+    matTooltipClass="background-tooltip"
+    (click)="inputFile.click()"
+    *ngIf="uploadIcon"
+    [ngClass]="{ 'no-clickable': disableUpload }"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      [ngClass]="{
+        'table-icon-color': !disableUpload,
+        'text-secondary': disableUpload
+      }"
+      >file_upload</mat-icon
+    >
+  </button>
+
+  <button
+    mat-icon-button
+    [matTooltip]="textoDescargar"
+    matTooltipPosition="right"
+    matTooltipHideDelay="500"
+    matTooltipClass="background-tooltip"
+    *ngIf="!file && loadedFile && loadedFile.id && downloadIcon"
+    (click)="abrirArchivo()"
+    [ngClass]="{
+      'no-clickable': disableDownload && loadedFile && loadedFile.id <= 0
+    }"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      [ngClass]="{
+        'table-icon-color': !disableDownload && loadedFile && loadedFile.id > 0,
+        'text-secondary': disableDownload && loadedFile && loadedFile.id <= 0
+      }"
+      >file_download</mat-icon
+    >
+  </button>
+  <button
+    mat-icon-button
+    [matTooltip]="textoDescargar"
+    matTooltipPosition="right"
+    matTooltipHideDelay="500"
+    matTooltipClass="background-tooltip"
+    *ngIf="file && downloadIcon"
+    (click)="abrirArchivo()"
+    [ngClass]="{
+      'no-clickable': disableDownload && loadedFile && loadedFile.id <= 0
+    }"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      [ngClass]="{
+        'table-icon-color': !disableDownload && loadedFile && loadedFile.id > 0,
+        'text-secondary': disableDownload && loadedFile && loadedFile.id <= 0
+      }"
+      >file_download</mat-icon
+    >
+  </button>
+
+  <button
+    mat-icon-button
+    matTooltip="Eliminar archivo"
+    matTooltipPosition="right"
+    matTooltipHideDelay="500"
+    matTooltipClass="background-tooltip"
+    *ngIf="deleteIcon"
+    (click)="borrarArchivo(inputFile)"
+    [ngClass]="{
+      'no-clickable': disableDownload && loadedFile && loadedFile.id <= 0
+    }"
+  >
+    <mat-icon
+      class="material-icons-outlined"
+      [ngClass]="{
+        'table-icon-color': !disableDownload && loadedFile && loadedFile.id > 0,
+        'text-secondary': disableDownload && loadedFile && loadedFile.id <= 0
+      }"
+      >close</mat-icon
+    >
+  </button>
+</ng-container>
+
+<div class="d-flex align-items-center gap-3" *ngIf="apariencia == 'new'">
+  <button
+    class="btn button-new"
+    type="button"
+    (click)="inputFile.click()"
+    *ngIf="!file && !loadedFile"
+  >
+    {{ textoCargar ? textoCargar : "Select file" }}
+  </button>
+
+  <ng-container *ngIf="!file && loadedFile && loadedFile.id">
+    <section class="w-100 d-flex align-items-center justify-content-between">
+      <button class="btn btn-secondary text-nowrap" (click)="abrirArchivo()">
+        {{
+          loadedFile.nombreArchivo
+            ? loadedFile.nombreArchivo.length > 20
+              ? loadedFile.nombreArchivo.substring(0, 20) +
+                "..." +
+                loadedFile.nombreArchivo.substring(
+                  loadedFile.nombreArchivo.length - 4,
+                  loadedFile.nombreArchivo.length
+                )
+              : loadedFile.nombreArchivo
+            : "Archivo seleccionado"
+        }}
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        (click)="borrarArchivo(inputFile)"
+        class="bg-white"
+        *ngIf="downloadIcon"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="file">
+    <section class="w-100 d-flex align-items-center justify-content-between">
+      <button class="btn btn-secondary text-nowrap" (click)="abrirArchivo()">
+        {{
+          file.name
+            ? file.name.length > 20
+              ? file.name.substring(0, 20) +
+                "..." +
+                file.name.substring(file.name.length - 4, file.name.length)
+              : file.name
+            : textoDescargar
+            ? textoDescargar
+            : "Archivo seleccionado"
+        }}
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        (click)="borrarArchivo(inputFile)"
+        class="bg-white"
+        *ngIf="deleteIcon"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </section>
+  </ng-container>
+</div>
+
+<input
+  type="file"
+  [accept]="fileExtension"
+  #inputFile
+  hidden
+  (change)="retornarArchivo($event, inputFile)"
+/>

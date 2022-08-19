@@ -17,14 +17,28 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TimeAgoPipe } from 'time-ago-pipe';
-import { AuroraHelperDialogComponent } from './dialog/dialog.component';
-import { AuroraHelperSnackbarComponent } from './snackbar/snackbar.component';
+import { AuroraHelperDialogComponent } from './components/dialog/dialog.component';
+import { RequestsService } from '../core/services/requests.service';
+import { HelpersService } from '../core/services/helpers.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AuroraIconComponent } from './components/aurora-icon/aurora-icon.component';
+import { LoadFileComponent } from './components/load-file/load-file.component';
+import { ModalService } from '../core/services/modal.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuroraSocialMediaComponent } from './components/aurora-social-media/aurora-social-media.component';
 
 @NgModule({
-  declarations: [AuroraHelperDialogComponent, AuroraHelperSnackbarComponent],
+  declarations: [
+    AuroraHelperDialogComponent,
+    AuroraIconComponent,
+    LoadFileComponent,
+    AuroraSocialMediaComponent,
+  ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     //Material
     MatTableModule,
     MatPaginatorModule,
@@ -40,16 +54,20 @@ import { AuroraHelperSnackbarComponent } from './snackbar/snackbar.component';
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogModule,
     MatSnackBarModule,
+    MatDialogModule,
+    MatTooltipModule,
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     //Aurora
     AuroraHelperDialogComponent,
-    AuroraHelperSnackbarComponent,
+    AuroraIconComponent,
+    LoadFileComponent,
+    AuroraSocialMediaComponent,
     //Material
     MatTableModule,
     MatPaginatorModule,
@@ -67,7 +85,8 @@ import { AuroraHelperSnackbarComponent } from './snackbar/snackbar.component';
     MatNativeDateModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
-  providers: [TimeAgoPipe],
+  providers: [TimeAgoPipe, RequestsService, HelpersService, ModalService],
 })
 export class SharedModule {}

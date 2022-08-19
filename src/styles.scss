@@ -2,10 +2,13 @@
 
 @import "./assets/scss/variables";
 @import "./assets/scss/bootstrap";
+@import "./assets/scss/scrollbar";
+@import "./assets/scss/material";
+@import "./assets/scss/loading-spinner";
+@import "./assets/scss/own-classes";
 
 * {
   font-size: 16px;
-  transition: all ease-in 1s;
 }
 html,
 body {

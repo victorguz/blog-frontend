@@ -1,33 +1,31 @@
 @import "node_modules/bootstrap/scss/bootstrap.scss";
-.row {
-  margin: 0 !important;
-  padding: 0 !important;
-}
+
 .btn {
-  border-radius: $button-radius;
+  border-radius: $button-radius !important;
   box-shadow: none !important;
-  font-weight: 600;
-  padding: 7px 23px;
+  font-weight: 600 !important;
+  border-color: transparent !important;
+
+  &:not(.btn-sm, .btn-lg) {
+    padding: 7px 23px !important;
+  }
 
   &:hover,
   &:active {
     background: #0000001c;
-    border-color: transparent;
   }
 
   &.btn-primary {
     &:hover,
     &:active {
-      background: transparent;
-      border-color: transparent;
+      background: white;
       box-shadow: $button-shadow;
     }
   }
 
   &.btn-outline-primary {
-    background: transparent;
+    background: white;
     color: $primary-active;
-    border-color: transparent;
     box-shadow: $button-shadow;
 
     &:hover,
@@ -35,4 +33,26 @@
       box-shadow: none;
     }
   }
+}
+
+.row {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.rounded {
+  border-radius: $default-radius !important;
+}
+.rounded-0 {
+  border-radius: 0 !important;
+}
+.shadow {
+  box-shadow: 0 0 2rem 0 rgb(136 152 170 / 15%);
+}
+
+.card {
+  @extend .rounded, .shadow;
+  box-shadow: 0 0 2rem 0 rgb(136 152 170 / 15%);
+  border-color: transparent;
+  // background-color: #ffffffa2;
+  // filter: blur(5px);
 }

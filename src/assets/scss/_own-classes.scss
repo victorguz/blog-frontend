@@ -1,0 +1,30 @@
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.background-tooltip {
+  font-size: 12px !important;
+}
+
+.text-primary-active {
+  color: $primary-active;
+}
+
+hr {
+  background-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}

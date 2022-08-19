@@ -7,7 +7,7 @@ const { app } = require("./dist/blog/serverless/main");
 
 const handle = serverless(app, {
   provider: 'aws',
-  type: 'lambda-edge-origin-request'
+  // type: 'lambda-edge-origin-request'
 });
 
 const handler = async (event, context, callback) => {
@@ -19,7 +19,7 @@ const handler = async (event, context, callback) => {
     removeAttributeQuotes: true,
     removeComments: true
   });
-  callback(null, {
+  const callbackBody = {
     status: response.status,
     statusDescription: response.statusDescription,
     headers: {
@@ -27,8 +27,9 @@ const handler = async (event, context, callback) => {
     },
     body: minified,
     bodyEncoding: response.bodyEncoding
-  });
-
+  }
+  callback(null, callbackBody);
+  console.log(callbackBody)
 }
 
 exports.handler = handler;

@@ -1,0 +1,11 @@
+.post {
+  .post-img {
+    border-radius: var(--default-radius);
+    object-fit: cover;
+    width: 763px;
+    height: 411px;
+  }
+  .description {
+    max-width: 564px;
+  }
+}

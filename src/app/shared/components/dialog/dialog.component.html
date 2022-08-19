@@ -1,0 +1,23 @@
+<article class="card">
+  <section class="icon">
+    <div class="back text-{{ color }}">
+      <mat-icon *ngIf="this.icon" class="material-icons-round">{{
+        icon
+      }}</mat-icon>
+    </div>
+  </section>
+  <section [innerHTML]="data.options.text" class="card-body pt-1"></section>
+  <section class="card-footer">
+    <button mat-button (click)="onCancelClick()">
+      {{ data.options.cancelButton }}
+    </button>
+    <button
+      mat-flat-button
+      (click)="onOkClick()"
+      class="btn btn-{{ color }}"
+      cdkFocusInitial
+    >
+      {{ data.options.okButton }}
+    </button>
+  </section>
+</article>

@@ -1,0 +1,52 @@
+<section
+  class="d-flex flex-column align-items-center justify-content-center mt-3 mb-5"
+>
+  <div
+    class="d-flex align-items-center gap-3 overflow-auto pb-5 pe-3"
+    style="max-width: 100vw"
+  >
+    <button
+      class="btn"
+      [ngClass]="{
+        'btn-outline-primary': selectedCategory(categories[0].category),
+        'bg-white': selectedCategory(categories[0].category)
+      }"
+      (click)="setRoute(categories[0].category)"
+    >
+      {{ categories[0].name }}
+    </button>
+    <button
+      class="btn"
+      [ngClass]="{
+        'btn-outline-primary': selectedCategory(item.category),
+        'bg-white': selectedCategory(item.category)
+      }"
+      (click)="setRoute(item.category)"
+      *ngFor="let item of categories | slice: 1"
+    >
+      {{ item.name }}
+    </button>
+    <button mat-icon-button class="btn" (click)="showSearch = !showSearch">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  <div
+    class="input-search"
+    #blogSearch
+    [ngStyle]="{
+      transition: 'all ease-in 0.2s',
+      opacity: showSearch ? 1 : 0,
+      height: showSearch ? '36px' : 0
+    }"
+  >
+    <aurora-icon name="search-outline"></aurora-icon>
+    <input
+      type="text"
+      class="form-control bg-transparent border-0"
+      placeholder="¿Qué te gustaría encontrar?"
+      #blogSearchInput
+    />
+    <aurora-icon name="close-circle"></aurora-icon>
+  </div>
+</section>

@@ -13,93 +13,14 @@ export const environment = {
 
   adminRoute: 'admin',
   authRoute: 'auth',
-  domain: 'http://localhost:3000/',
+  domain: 'http://localhost:3000',
   encryptLocalStorage: false,
   //urls basicas necesarias para el buen funcionamiento del framework
-  apis: {
-    pockets: {
-      all: { value: 'pockets', method: 'GET', contentType: 'application/json' },
-      id: {
-        value: 'pockets/{{:id}}',
-        method: 'GET',
-        contentType: 'application/json',
-      },
-      create: {
-        value: 'pockets',
-        method: 'POST',
-        contentType: 'application/json',
-      },
-      update: {
-        value: 'pockets/{{:id}}',
-        method: 'PATCH',
-        contentType: 'application/json',
-      },
-      delete: {
-        value: 'pockets/{{:id}}',
-        method: 'DELETE',
-        contentType: 'application/json',
-      },
-    },
-    categories: {
-      all: {
-        value: 'categories',
-        method: 'GET',
-        contentType: 'application/json',
-      },
-      id: {
-        value: 'categories/{{:id}}',
-        method: 'GET',
-        contentType: 'application/json',
-      },
-      create: {
-        value: 'categories',
-        method: 'POST',
-        contentType: 'application/json',
-      },
-      update: {
-        value: 'categories/{{:id}}',
-        method: 'PATCH',
-        contentType: 'application/json',
-      },
-      delete: {
-        value: 'categories/{{:id}}',
-        method: 'DELETE',
-        contentType: 'application/json',
-      },
-    },
-    movements: {
-      all: {
-        value: 'movements',
-        method: 'GET',
-        contentType: 'application/json',
-      },
-      id: {
-        value: 'movements/{{:id}}',
-        method: 'GET',
-        contentType: 'application/json',
-      },
-      create: {
-        value: 'movements',
-        method: 'POST',
-        contentType: 'application/json',
-      },
-      update: {
-        value: 'movements/{{:id}}',
-        method: 'PATCH',
-        contentType: 'application/json',
-      },
-      delete: {
-        value: 'movements/{{:id}}',
-        method: 'DELETE',
-        contentType: 'application/json',
-      },
-    },
-  },
   /**
    * Dominios (dominio.com) a los que se enviará el token en el header de la petición.
    * Utilizar solo en caso que el dominio sea distinto del actual, ya que es allowed por defecto.
    */
-  allowedDomains: ['http://localhost:3000/'],
+  allowedDomains: ['http://localhost:3000'],
   /**
    * Rutas en las que no se tendrá en cuenta el envío del token.
    * Pueden ser del mismo dominio.

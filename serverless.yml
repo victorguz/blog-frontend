@@ -18,18 +18,19 @@ package:
   excludeDevDependencies: true
   patterns:
     - "!**"
-    - "node_modules/html-minifier/**"
-    - "node_modules/commander/**"
-    - "node_modules/upper-case/**"
-    - "node_modules/clean-css/**"
-    - "node_modules/source-map/**"
-    - "node_modules/lower-case/**"
-    - "node_modules/no-case/**"
-    - "node_modules/he/**"
-    - "node_modules/param-case/**"
-    - "node_modules/relateurl/**"
-    - "node_modules/uglify-js/**"
-    - "node_modules/serverless-http/**"
+    # Se añadieron las siguientes librerias a un layer.
+    # - "node_modules/html-minifier/**"
+    # - "node_modules/commander/**"
+    # - "node_modules/upper-case/**"
+    # - "node_modules/clean-css/**"
+    # - "node_modules/source-map/**"
+    # - "node_modules/lower-case/**"
+    # - "node_modules/no-case/**"
+    # - "node_modules/he/**"
+    # - "node_modules/param-case/**"
+    # - "node_modules/relateurl/**"
+    # - "node_modules/uglify-js/**"
+    # - "node_modules/serverless-http/**"
     - "dist/**"
     - "lambda.js"
 custom:
@@ -57,6 +58,7 @@ functions:
           method: ANY
     layers:
       - arn:aws:lambda:us-west-2:206284375225:layer:coky-lambda-layer1:3
+      - arn:aws:lambda:us-west-2:206284375225:layer:angular-ssr-layer:1
     environment:
       NODE_ENV: ${self:provider.stage}
       APP_KEY: ${ssm:PUBLIC_APP_KEY}

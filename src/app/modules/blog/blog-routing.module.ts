@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BlogHomeComponent } from './components/blog-home/blog-home.component';
+import { BlogPostViewComponent } from './components/blog-post-view/blog-post-view.component';
 
 const routes: Routes = [
   { path: 'home', component: BlogHomeComponent, data: { title: 'Blog' } },
@@ -9,8 +10,12 @@ const routes: Routes = [
     component: BlogHomeComponent,
     data: { title: 'blog' },
   },
-  { path: 'profile', component: BlogHomeComponent, data: { title: 'Blog' } },
-  { path: '**', redirectTo: 'home' },
+  {
+    path: 'post/:id',
+    component: BlogPostViewComponent,
+    data: { title: 'Blog' },
+  },
+  { path: '**', pathMatch: 'prefix', redirectTo: 'home' },
 ];
 
 @NgModule({

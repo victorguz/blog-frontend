@@ -14,6 +14,7 @@ import {
   getLocaleDayNames,
   getLocaleMonthNames,
 } from '@angular/common';
+import { Base64File } from '../../shared/interfaces/shared.interfaces';
 
 ///////////////Funciones globales
 
@@ -203,18 +204,10 @@ export function getApiKey() {
 }
 
 /**
- * Obtiene el dominio del cliente (básicamente el dominio de la url)
- * @returns el dominio del cliente
- */
-export function getClientDomain() {
-  return `${location.protocol}`;
-}
-
-/**
  * Muestra un Spinner (loading) y muestra el mensaje especificado
  * @param message
  */
-export function showSpinner(message: string = 'Cargando...') {
+export function showLoadingSpinner(message: string = 'Loading...') {
   document
     .getElementById('aurora-spinner-container')
     ?.removeAttribute('hidden');
@@ -222,7 +215,7 @@ export function showSpinner(message: string = 'Cargando...') {
   spinnerMessage ? (spinnerMessage.innerHTML = message) : '';
 }
 
-export function hideSpinner() {
+export function hideLoadingSpinner() {
   document
     .getElementById('aurora-spinner-container')
     ?.setAttribute('hidden', 'true');
@@ -315,4 +308,16 @@ export function getMonthName(
 
 export function valueToCurrency(value: number, currency: string) {
   return `$${value} ${currency}`;
+}
+
+export async function base64ToFile(loadedFile: Base64File) {
+  if (loadedFile != undefined) {
+    const url = `data:${loadedFile.mimeType};base64,${loadedFile.base64}`;
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([buf], loadedFile.nombreArchivo, {
+      type: loadedFile.mimeType,
+    });
+  }
+  return null;
 }

@@ -5,3 +5,21 @@ export enum LOGICAL_STATUS {
   ENABLED = 'ENA',
   DELETED = 'DEL',
 }
+export enum ContentType {
+  JSON = 'application/json',
+  FORM = 'application/x-www-form-urlencoded',
+}
+export enum RequestMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+}
+export const LIMITE_CARGA = '4';
+
+export const PostCategories = [
+  { name: 'Frontend', value: 'frontend' },
+  { name: 'Backend', value: 'backend' },
+  { name: 'UX/UI', value: 'uxui' },
+];
