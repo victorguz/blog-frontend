@@ -52,6 +52,7 @@
     "express": "^4.15.2",
     "he": "^1.2.0",
     "html-minifier": "^4.0.0",
+    "html2canvas": "^1.4.1",
     "lower-case": "^2.0.2",
     "no-case": "^3.0.4",
     "param-case": "^3.0.4",

@@ -1,45 +1,74 @@
-<div class="container-fluid p-3">
-  <div class="card sidebar">
-    <div class="card-body">
-      <div class="d-flex align-items-center gap-2 flex-column flex-sm-row mb-3">
-        <img
-          src="assets/images/png/profile.png"
-          alt="profile-img"
-          class="img-fluid rounded-circle"
-          width="40"
-        />
-        <div class="d-flex flex-column text-center text-sm-start">
-          <span class="text-dark">Victor Guzmán Berrio</span>
-          <small class="text-primary-active">Software Engineer</small>
+<div class="pt-3 pb-3 position-relative w-100 h-100" style="z-index: 1">
+  <div class="row">
+    <div class="col-8">
+      <video
+        #videoRef
+        src="assets/camilo-por-primera-vez.mp4"
+        width="100%"
+        controls="true"
+      ></video>
+
+      <div class="d-flex">
+        <button mat-icon-button class="bg-primary" (click)="takeVideoFrame()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card text-start">
+        <div class="card-body">
+          <h4 class="card-title">Comentarios</h4>
+          <div class="comentario d-flex flex-column">
+            <strong>
+              <span class="text-primary me-2">02:01:06</span>
+              <span>Andrea Casiani</span>
+            </strong>
+            <p>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem
+              facilis harum, aliquid, blanditiis...
+            </p>
+          </div>
         </div>
       </div>
-      <hr />
-      <div class="options d-flex flex-column mt-3">
-        <button class="btn option w-100">
-          <mat-icon>search</mat-icon>
-          Find something
-        </button>
+    </div>
+  </div>
 
-        <button class="btn option w-100">
-          <mat-icon class="text-success">shoping_cart</mat-icon>
-          Do something
-        </button>
+  <div class="container-fluid">
+    <div
+      class="image-container centered bg-black opacity-25 w-100 h-100 d-none align-items-start justify-content-end"
+      style="z-index: 2"
+    >
+      <button
+        mat-icon-button
+        class="bg-white m-4"
+        (click)="setVisibleFrame(false)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-        <button class="btn option w-100">
-          <mat-icon class="text-danger">edit</mat-icon>
-          Make something
-        </button>
+    <div
+      class="draw-container centered d-none align-items-center justify-content-center"
+      style="z-index: 3; pointer-events: none; width: 90%"
+    >
+      <img
+        alt="taken-image"
+        class="img-fluid taken-image"
+        width="100%"
+        #image
+      />
 
-        <button class="btn option w-100">
-          <mat-icon class="text-info">menu</mat-icon>
-          Look something
-        </button>
-
-        <button class="btn option w-100">
-          <mat-icon class="text-warning">add</mat-icon>
-          Add something
-        </button>
-      </div>
+      <section class="drawer centered" style="z-index: 4; pointer-events: all">
+        <canvas
+          id="canvasId"
+          #canvasRef
+          style="pointer-events: all"
+          [width]="image.width"
+          [height]="image.height"
+          (mousedown)="mouseDown()"
+          (mouseup)="mouseUp()"
+        ></canvas>
+      </section>
     </div>
   </div>
 </div>

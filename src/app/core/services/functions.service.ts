@@ -8,6 +8,7 @@ import {
   isNotEmpty,
   isNotEmptyObject,
   isObject,
+  isString,
 } from 'class-validator';
 import {
   FormStyle,
@@ -310,13 +311,36 @@ export function valueToCurrency(value: number, currency: string) {
   return `$${value} ${currency}`;
 }
 
-export async function base64ToFile(loadedFile: Base64File) {
+export async function base64ToFile(loadedFile: Base64File | string) {
   if (loadedFile != undefined) {
-    const url = `data:${loadedFile.mimeType};base64,${loadedFile.base64}`;
+    ('data:image/png;base64,');
+    let url;
+    let newFile;
+    if (isString(loadedFile)) {
+      newFile = {
+        mimeType: loadedFile.substring(
+          loadedFile.indexOf(':') + 1,
+          loadedFile.indexOf(';base64,')
+        ),
+        nombreArchivo:
+          'archivo.' +
+          loadedFile.substring(
+            loadedFile.indexOf('/') + 1,
+            loadedFile.indexOf(';base64,')
+          ),
+      };
+      url = loadedFile;
+    } else {
+      url = `data:${loadedFile.mimeType};base64,${loadedFile.base64}`;
+      newFile = {
+        mimeType: loadedFile.mimeType,
+        nombreArchivo: loadedFile.nombreArchivo,
+      };
+    }
     const res = await fetch(url);
     const buf = await res.arrayBuffer();
-    return new File([buf], loadedFile.nombreArchivo, {
-      type: loadedFile.mimeType,
+    return new File([buf], newFile.nombreArchivo, {
+      type: newFile.mimeType,
     });
   }
   return null;
