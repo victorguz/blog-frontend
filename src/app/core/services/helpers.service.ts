@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
-import { TimeAgoPipe } from 'time-ago-pipe';
-import { environment } from '../../../environments/environment';
 import {
-  getConfig,
-  ignoreSpecialCharacters,
-  toTitleCase,
-} from './functions.service';
-import { ModalService } from './modal.service';
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router,
+} from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
+
+import { APP_TITLE } from '../constants.config';
+import { DatePipe } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { NotificacionesService } from './notificaciones.service';
+import { isNotEmpty } from 'class-validator';
+import { toTitleCase } from './functions.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,37 +20,76 @@ export class HelpersService {
   constructor(
     private title: Title,
     private meta: Meta,
-    public notifications: ModalService,
-    private timeAgo: TimeAgoPipe
+    public notificaciones: NotificacionesService,
+    public datePipe: DatePipe,
+    public route: Router,
+    public formBuilder: FormBuilder
   ) {}
   /**
    * Set a new page meta title
-   * @param title The new title
-   * @param stringCase Case to transform
+   * @param title
+   * @param redirectTo
    */
-  public setTitle(title: string) {
-    title = ignoreSpecialCharacters(title.trim(), ' ');
+  public setTitle(title?: string, redirectTo?: string) {
+    title = title ? title.trim() : '';
     if (title.length > 0) {
-      this.title.setTitle(
-        toTitleCase(
-          `${title} | ${getConfig('app_name')} - ${environment.name}`,
-          '.'
-        )
-      );
+      this.title.setTitle(toTitleCase(`${title} | ${APP_TITLE}`));
     } else {
-      this.title.setTitle(
-        toTitleCase(`${getConfig('app_name')} - ${environment.name}`, '.')
-      );
+      this.title.setTitle(toTitleCase(`${APP_TITLE}`));
     }
     const interval = setInterval(() => {
-      const navTitle = document.getElementById('aurora-nav-title');
-      if (navTitle) {
-        navTitle.innerHTML = toTitleCase(title, '.');
-        clearInterval(interval);
+      const navContainer = document.querySelector(
+        '.aurora-private-back-container'
+      );
+      const navLink = document.querySelector('.aurora-private-back-link');
+      const navDescription = document.querySelector(
+        '.aurora-private-back-description'
+      );
+      if (navLink && isNotEmpty(redirectTo)) {
+        navLink.setAttribute('href', redirectTo!);
       }
-    }, 500);
+      if (navContainer && navDescription) {
+        if (title) {
+          navDescription.innerHTML = title;
+          this.hideElement(navContainer, false);
+        } else {
+          this.hideElement(navContainer, true);
+        }
+      }
+      clearInterval(interval);
+    }, 100);
   }
 
+  /**
+   * set title from route
+   */
+  public setTitleFromSnapshot(route: ActivatedRouteSnapshot | null) {
+    if (isNotEmpty(route)) {
+      const data = route?.data!;
+      let title = data['title'];
+      let redirectTo = data['redirectTo'];
+      this.setTitle(title, redirectTo);
+    } else {
+      this.setTitle('');
+    }
+  }
+
+  /**
+   * oculta un elemento html
+   * @param element
+   * @param hide
+   */
+  public hideElement(element: Element | null, hide: boolean = true) {
+    if (element) {
+      if (element.classList.contains('d-none') && !hide) {
+        element.classList.remove('d-none');
+        element.classList.add('d-flex');
+      } else if (element.classList.contains('d-flex') && hide) {
+        element.classList.remove('d-flex');
+        element.classList.add('d-none');
+      }
+    }
+  }
   /**
    * Current title
    * @returns current title
@@ -54,32 +97,7 @@ export class HelpersService {
   public getTitle(): string {
     return this.title.getTitle();
   }
-  public getTimeAgo(date: Date) {
-    const result = this.timeAgo
-      .transform(date.toString())
-      .replace('seconds', 'segundos')
-      .replace('seconds', 'segundos')
-      .replace('minutes', 'minutos')
-      .replace('hours', 'horas')
-      .replace('days', 'días')
-      .replace('months', 'meses')
-      .replace('years', 'años')
-      .replace('second', 'segundo')
-      .replace('minute', 'minuto')
-      .replace('an hour', 'una hora')
-      .replace('day', 'día')
-      .replace('month', 'mes')
-      .replace('year', 'año')
-      .replace('a ', 'un ')
-      .replace('an ', 'un ')
-      .replace('ago', '');
 
-    if (date < new Date()) {
-      return result.includes('yesterday') ? 'ayer' : 'hace ' + result;
-    } else {
-      return result.includes('yesterday') ? 'hoy' : 'en ' + result;
-    }
-  }
   /**
    * Set a meta tag element on the head of current HTML
    * @param name

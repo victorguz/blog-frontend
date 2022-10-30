@@ -1,0 +1,66 @@
+<nav
+  class="navbar navbar-dark bg-primary navbarSize backgraundColorNavBar"
+  style="min-width: 850px"
+>
+  <div
+    class="container-fluid d-flex justify-content-start align-items-center"
+    style="padding-left: 0px; min-width: 900px"
+  >
+    <div
+      class="d-flex justify-content-start flex-shrink-1 height:100px; width:50px"
+    >
+      <button
+        [ngClass]="{ bottonNav: !expand, bottonNavExpand: expand }"
+        (click)="changeExpand()"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="d-flex justify-content-between align-items-center flex-fill">
+      <div>
+        <img
+          class="logo"
+          src="../../../../../../assets/images/LOGOBOMBILLO1-02.png"
+          alt=""
+        />
+      </div>
+      <h5>Gestor de Proyectos Bombillo Amarillo</h5>
+      <button class="btn p-0" [matMenuTriggerFor]="menuPerfil">
+        <div class="d-flex justify-content-center align-items-center">
+          <mat-icon
+            fontIcon="perm_identity"
+            style="
+              font-size: 35px;
+              height: 40px;
+              width: 40px;
+              margin-left: 5px;
+              margin-right: 5px;
+            "
+          ></mat-icon>
+          <div class="d-flex flex-column text-start">
+            <span
+              *ngIf="usuario && usuario.nombres && usuario.apellidos"
+              class="d-flex align-items-center fw-bold"
+            >
+              {{ usuario.nombres + " " + usuario.apellidos | titlecase }}
+              <mat-icon fontIcon="arrow_drop_down"></mat-icon>
+            </span>
+            <small *ngIf="usuario && usuario.rol && usuario.rol.nombre">
+              {{ usuario.rol.nombre | phrasecase }}
+            </small>
+          </div>
+        </div>
+      </button>
+      <mat-menu #menuPerfil="matMenu">
+        <button mat-menu-item (click)="modalCambiarContrasena()">
+          <mat-icon>key</mat-icon>
+          Cambiar contraseña
+        </button>
+        <button mat-menu-item (click)="cerrarSesion()">
+          <mat-icon>logout</mat-icon>
+          Cerrar sesión
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</nav>

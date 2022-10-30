@@ -2,17 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PrivateRoutingModule } from './private-routing.module';
-
-import { PrivateNavbarComponent } from './components/layout/private-navbar/private-navbar.component';
-import { PrivateFooterComponent } from './components/layout/private-footer/private-footer.component';
-import { PrivateComponent } from './components/layout/private/private.component';
-import { SharedModule } from '../../shared/shared.module';
+import { PrivateComponent } from './components/private/private.component';
+import { SharedModule } from '../shared/shared.module';
+import { PrivateNavbarComponent } from './components/private-navbar/private-navbar.component';
+import { PrivateSidebarComponent } from './components/private-sidebar/private-sidebar.component';
 
 @NgModule({
   declarations: [
     PrivateComponent,
     PrivateNavbarComponent,
-    PrivateFooterComponent,
+    PrivateSidebarComponent,
   ],
   imports: [CommonModule, PrivateRoutingModule, SharedModule],
 })

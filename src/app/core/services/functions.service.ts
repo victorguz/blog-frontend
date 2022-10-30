@@ -1,45 +1,41 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { config } from '../default.config';
-import { secureStorage } from '../secure.config';
-import * as CryptoJS from 'crypto-js';
 import {
-  isEmpty,
-  isNotEmpty,
-  isNotEmptyObject,
-  isObject,
-  isString,
-} from 'class-validator';
+  ESTADOS_ASIGNACIONES,
+  ESTADOS_PROYECTOS,
+  TYPE_OF_FILES,
+} from './../constants.config';
+import { HttpErrorResponse } from '@angular/common/http';
+import { isNotEmpty, isString, arrayNotEmpty } from 'class-validator';
 import {
   FormStyle,
   getLocaleDayNames,
   getLocaleMonthNames,
 } from '@angular/common';
-import { Base64File } from '../../shared/interfaces/shared.interfaces';
+import { secureStorage } from '../secure-storage.config';
+import { FormGroup } from '@angular/forms';
+import { REGEX } from '../constants.config';
+import * as CryptoJS from 'crypto-js';
+import { environment } from '../../../environments/environment';
+import { Buffer } from 'buffer';
 
 ///////////////Funciones globales
 
-/**
- * Analiza gramaticalmente el texto plano en formato csv, para luego retornar un arreglo de objetos
- * @param plainText Texto plano del archivo
- * @param separator Separador de las columnas
- * @param headers Si incluye encabezados
- */
-export function parseCsvInfo(
-  plainText: string,
-  separator: ';' | ',' = ';',
-  headers: boolean = true
-): any[] {
-  return [];
+export function hash256(key) {
+  key = CryptoJS.SHA256(key);
+  return key.toString();
 }
-/**
- * Se comparan las dos fechas para obtener el tiempo transcurrido o restante en formato 'time ago'
- * @param firstDate
- * @param secondDate
- * @returns
- */
-export function timeAgo(firstDate: Date, secondDate: Date): string {
-  return '';
+export function hash512(key) {
+  key = CryptoJS.SHA512(key);
+  return key.toString();
+}
+export function encrypt(data) {
+  data = CryptoJS.AES.encrypt(data, environment.encryption.secret_key);
+  data = data.toString();
+  return data;
+}
+export function decrypt(data) {
+  data = CryptoJS.AES.decrypt(data, environment.encryption.secret_key);
+  data = data.toString(CryptoJS.enc.Utf8);
+  return data;
 }
 
 /**{
@@ -49,7 +45,7 @@ export function timeAgo(firstDate: Date, secondDate: Date): string {
  * @param split
  */
 export function toTitleCase(cad: string, split: string = ' ') {
-  cad = cad.trim().toLowerCase();
+  cad = cad ? cad.trim().toLowerCase() : '';
   if (isNotEmpty(cad)) {
     let arr = cad.split(split);
     cad = '';
@@ -71,20 +67,7 @@ export function toPhraseCase(cad: string) {
 }
 
 /**
- * Obtiene la configuración con la clave 'name'
- * @param name Nombre de la configuración
- * @returns {any}
- */
-export function getConfig(name: string) {
-  //find config on database ad return it if it's found.
-  //return ConfigService.getConfig(name)
-  //else
-
-  return config[name];
-}
-
-/**
- * Set the data on localStorage (secureStorage)
+ * Set the data on secureStorage (secureStorage)
  * @param name item name
  * @param data item data
  */
@@ -95,7 +78,7 @@ export function setOnLocal(name: string, data: any) {
   secureStorage.setItem(name, data);
 }
 /**
- * Deletes item from localStorage (secureStorage)
+ * Deletes item from secureStorage (secureStorage)
  * @param name
  */
 export function removeFromLocal(name: string) {
@@ -106,7 +89,7 @@ export function removeFromLocal(name: string) {
 }
 
 /**
- * Gets the localStorage (secureStorage) string by name and parse it like JSON.
+ * Gets the secureStorage (secureStorage) string by name and parse it like JSON.
  * If it isn't an object, array or string, returns null.
  * @param name
  * @returns the object or array
@@ -115,8 +98,13 @@ export function getFromLocal(name: string): any {
   return secureStorage.getItem(name);
 }
 
-export function getToken(): string {
-  return getFromLocal(environment.COOKIE_TOKEN);
+export function pushToLocalArray(name: string, value: any) {
+  let array: any[] = getFromLocal(name);
+  if (!array) {
+    array = [];
+  }
+  array.push(value);
+  setOnLocal(name, array);
 }
 
 export function getBasicError(error: any, print: boolean = false): any {
@@ -135,55 +123,12 @@ export function getErrorMessage(error: any, print: boolean = true): string {
   }
   return error.message ? error.message : 'Error en la petición';
 }
-
-export function hash256(key: string) {
-  return CryptoJS.SHA256(key).toString();
+export function matchString(
+  data: string | null | undefined,
+  regex: RegExp = REGEX.alfanumerico
+): boolean {
+  return data && data.match(regex) ? true : false;
 }
-export function hash512(key: string) {
-  return CryptoJS.SHA512(key).toString();
-}
-export function encrypt(data: any) {
-  data = CryptoJS.AES.encrypt(data, environment.secret_key);
-  data = data.toString();
-  return data;
-}
-export function decrypt(data: any) {
-  data = CryptoJS.AES.decrypt(data, environment.secret_key);
-  data = data.toString(CryptoJS.enc.Utf8);
-  return data;
-}
-/**
- * Retorna una cadena solamente con numeros y letras
- * @param cad
- * @returns
- */
-export function ignoreSpecialCharacters(
-  cad: string,
-  replacer: string = ''
-): string {
-  return cad.trim().replaceAll(/[\W]/gi, replacer);
-}
-
-/**
- * Retorna una cadena solamente con numeros y letras
- * @param cad
- * @returns
- */
-export function ignoreAllCharactersExceptLettersAndSpaces(
-  cad: string,
-  replacer: string = ''
-): string {
-  return cad.trim().replaceAll(/[^a-zA-Z ]/gi, replacer);
-}
-
-/**
- * Obtiene el dominio de mueblesjamar para el entorno activo
- * @returns dominio de mueblesjamar para el entorno activo
- */
-export function getDomain(): string {
-  return environment.domain;
-}
-
 /**
  * Convierte una fecha en el formato 'dd/mm/yyyy', ideal para oracle
  * @param fecha
@@ -197,28 +142,25 @@ export function dateToStringDayMonthYear(fecha: Date, sep: string = '/') {
 }
 
 /**
- * Obtiene el api_key del entorno
- * @returns api_key del entorno
- */
-export function getApiKey() {
-  return environment.api_key;
-}
-
-/**
  * Muestra un Spinner (loading) y muestra el mensaje especificado
  * @param message
  */
-export function showLoadingSpinner(message: string = 'Loading...') {
+export function showLoadingSpinner(
+  message: string = 'Cargando...',
+  number: 1 | 2 = 1
+) {
   document
-    .getElementById('aurora-spinner-container')
+    .getElementById('aurora-spinner-container' + number)
     ?.removeAttribute('hidden');
-  const spinnerMessage = document.getElementById('aurora-spinner-message');
+  const spinnerMessage = document.getElementById(
+    'aurora-spinner-message' + number
+  );
   spinnerMessage ? (spinnerMessage.innerHTML = message) : '';
 }
 
-export function hideLoadingSpinner() {
+export function hideLoadingSpinner(number: 1 | 2 = 1) {
   document
-    .getElementById('aurora-spinner-container')
+    .getElementById('aurora-spinner-container' + number)
     ?.setAttribute('hidden', 'true');
 }
 
@@ -229,12 +171,7 @@ export function hideLoadingSpinner() {
  * @param value cadena a evaluar
  */
 export function isPassword(value: string): boolean {
-  let regex =
-    /^((?=.*[\d])(?=.*[a-z])(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[a-z])(?=.*[^\w\d\s])).{8,}$/;
-  if (value.match(regex) != null) {
-    return true;
-  }
-  return false;
+  return value.match(REGEX.password) != null;
 }
 
 export function sortArray(array: any[], key: string | undefined = undefined) {
@@ -260,7 +197,7 @@ export function getMonthDay(days: number = 0) {
 export function getDayName(
   date: Date,
   length: 1 | 2 | 3 | 100 = 100,
-  locale: string = config.app.locale
+  locale: string = 'es_CO'
 ) {
   let dayLength: number;
   switch (length) {
@@ -285,7 +222,7 @@ export function getDayName(
 export function getMonthName(
   date: Date,
   length: 1 | 2 | 3 | 100 = 100,
-  locale: string = config.app.locale
+  locale: string = 'es_CO'
 ) {
   let monthLength: number;
   switch (length) {
@@ -307,14 +244,13 @@ export function getMonthName(
   return months[month].toUpperCase();
 }
 
-export function valueToCurrency(value: number, currency: string) {
-  return `$${value} ${currency}`;
-}
-
-export async function base64ToFile(loadedFile: Base64File | string) {
+export async function base64ToFileOrBlob(
+  loadedFile: string,
+  type: 'file' | 'blob' = 'file'
+) {
   if (loadedFile != undefined) {
     ('data:image/png;base64,');
-    let url;
+    let base64Data;
     let newFile;
     if (isString(loadedFile)) {
       newFile = {
@@ -329,19 +265,229 @@ export async function base64ToFile(loadedFile: Base64File | string) {
             loadedFile.indexOf(';base64,')
           ),
       };
-      url = loadedFile;
-    } else {
-      url = `data:${loadedFile.mimeType};base64,${loadedFile.base64}`;
-      newFile = {
-        mimeType: loadedFile.mimeType,
-        nombreArchivo: loadedFile.nombreArchivo,
-      };
+      base64Data = loadedFile;
     }
-    const res = await fetch(url);
-    const buf = await res.arrayBuffer();
-    return new File([buf], newFile.nombreArchivo, {
-      type: newFile.mimeType,
-    });
+    const res = await fetch(base64Data);
+    return type == 'file'
+      ? new File([await res.arrayBuffer()], newFile.nombreArchivo, {
+          type: newFile.mimeType,
+        })
+      : await res.blob();
   }
   return null;
+}
+
+export function blobToBase64(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = () => resolve(<string>reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+/**
+ * @description convierte un numero de segundos en un formato de hora
+ * @param segundos numero de segundos
+ * @param maxValue segundos maximos
+ * @returns
+ */
+export function secondsToHourFormat(segundos: number) {
+  segundos = segundos ? segundos : 0;
+  let hours: any = Math.floor(segundos / 3600);
+  let minutes: any = Math.floor((segundos - hours * 3600) / 60);
+  let seconds: any = segundos - hours * 3600 - minutes * 60;
+  let miliseconds: any = Math.round((seconds - Math.floor(seconds)) * 1000);
+
+  const formatNumber = (n: number) => {
+    return n < 10 ? '0' + n : n;
+  };
+
+  return (
+    formatNumber(hours) +
+    ':' +
+    formatNumber(minutes) +
+    ':' +
+    formatNumber(Math.floor(seconds)) +
+    ':' +
+    formatNumber(miliseconds)
+  );
+}
+
+/**
+ * @description valida los campos segun el nombre y las condiciones del formulario
+ * @param name nombre del campo en el formulario
+ * @returns
+ */
+export function isRequiredField(form: FormGroup, name: string) {
+  const invalid = form.get(name)?.invalid;
+  if (invalid) {
+    const dirty = form.get(name)?.dirty;
+    const empty =
+      typeof form.get(name)?.value == 'string' && form.get(name)?.value == '';
+    if (empty) {
+      return dirty;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+
+export function findInvalidControls(form: FormGroup) {
+  const invalid: any[] = [];
+  const controls = form.controls;
+  for (const name in controls) {
+    if (controls[name].invalid) {
+      invalid.push({ name, errors: controls[name].errors });
+    }
+  }
+  return invalid;
+}
+
+export function stringToBase64(cad: string) {
+  return Buffer.from(cad).toString('base64');
+}
+
+/**
+ * Obtiene el dominio del cliente (básicamente el dominio de la url)
+ * @returns el dominio del cliente
+ */
+export function getClientDomain() {
+  return location.origin;
+}
+
+export function isLocalhost() {
+  return location.origin.includes('localhost');
+}
+
+/**
+ * RN06: Duracion video en minutos x 60 = Total duración por capítulo en segundos
+ * Total duración por capítulo en segundos x Cantidad de capítulos = Duración total del proyecto en segundos
+ * Total duración capítulo x Frame rate = Cantidad de frames por capítulo
+ * Duración total del proyecto x Frame rate = Cantidad total de frames del proyecto
+ * @param value
+ */
+export function calcularDuracionProyecto(value: {
+  duracion: number;
+  numeroCapitulos: number;
+  cuadrosPorSegundo: number;
+}) {
+  const { duracion, numeroCapitulos, cuadrosPorSegundo } = value;
+
+  if (duracion && numeroCapitulos && cuadrosPorSegundo) {
+    const segundosVideo = duracion * 60; //duracion total por capitulo
+    const segundosProyecto = segundosVideo * numeroCapitulos; //duracion total del proyecto
+    // const framesVideo = segundosVideo * cuadrosPorSegundo; //frames por video
+    const framesProyecto = segundosProyecto * cuadrosPorSegundo; //total frames del proyecto
+    return { segundosProyecto, cuadrosPorSegundo, framesProyecto };
+  }
+  return null;
+}
+/**
+ * Al ingresar el nombre,  tipo  de proyecto  y  temporada se muestra  mensaje indicando
+ * el Nombre  con  el que  se visualizará el proyecto.Ejpara  el proyecto serie  animada Flash
+ * Light con  temporada  1 el  nombre  sería  FL_T01. Para el proyecto de película La nutria
+ * Sagaz que no tiene temporada el nombre sería el mismo La nutria Sagaz
+ * @param value
+ * @returns
+ */
+export function nombreProyectoTemporada(value: {
+  nombre: string;
+  temporada: number;
+  capitulo: number;
+}) {
+  let { nombre, temporada, capitulo } = value;
+
+  if (nombre && (temporada || capitulo)) {
+    const newTemporada = temporada
+      ? (temporada > 9 ? '' : '0') + temporada
+      : '';
+    const newCapitulo = capitulo ? (capitulo > 9 ? '' : '0') + capitulo : '';
+    const nuevoNombre = nombre
+      .trim()
+      .split(' ')
+      .map((value) => value[0])
+      .join('');
+    return `${nuevoNombre}${newTemporada ? '_T' + newTemporada : ''}${
+      newCapitulo ? '_C' + newCapitulo : ''
+    }`.toUpperCase();
+  }
+  return nombre;
+}
+/**
+ * Crea una fecha con los dias de mas o menos indicados
+ * @param days dias indicados
+ * @returns
+ */
+export function minDateForInput(days: number) {
+  return new Date(new Date().setDate(new Date().getDate() + days));
+}
+
+export function getClassEstadoAsignacion(estado: ESTADOS_ASIGNACIONES) {
+  switch (estado) {
+    case ESTADOS_ASIGNACIONES.EN_PROCESO:
+      return 'border bg-primary';
+    case ESTADOS_ASIGNACIONES.FINALIZADO:
+      return 'border bg-success';
+    case ESTADOS_ASIGNACIONES.CON_AJUSTES:
+      return 'border bg-info';
+    case ESTADOS_ASIGNACIONES.EN_REVISIÓN:
+      return 'border bg-tertiary';
+    case ESTADOS_ASIGNACIONES.VENCIDO:
+      return 'border bg-danger';
+    case ESTADOS_ASIGNACIONES.SIN_INICIAR:
+    default:
+      return 'border';
+  }
+}
+
+export function getClassEstadoProyecto(estado: ESTADOS_PROYECTOS) {
+  switch (estado) {
+    case ESTADOS_PROYECTOS.EN_PROCESO:
+      return 'border bg-primary';
+    case ESTADOS_PROYECTOS.FINALIZADO:
+      return 'border bg-success';
+    case ESTADOS_PROYECTOS.VENCIDO:
+      return 'border bg-danger';
+    case ESTADOS_PROYECTOS.SIN_INICIAR:
+      return 'border bg-light';
+    case ESTADOS_PROYECTOS.SIN_ASIGNACIONES:
+    default:
+      return 'border';
+  }
+}
+
+export function eliminarRepetidosArray(array: any[], key: string = 'id') {
+  let map = array.map((value) => value[key]);
+  map = map.filter((item, index) => {
+    return map.indexOf(item) === index;
+  });
+  return map.map((id) => array.find((value) => value[key] === id));
+}
+
+export function transformStringToDate(date: string): Date | null {
+  const split = date ? date.split('-') : [];
+  if (!date && !arrayNotEmpty(split)) {
+    return null;
+  }
+  const newDate = new Date(+split[0], +split[1] - 1, +split[2]);
+  return newDate;
+}
+
+export function isValidFileSize(
+  file: File,
+  MAX_UPLOAD_BYTES: number = environment.MAX_UPLOAD_BYTES
+) {
+  return file.size <= MAX_UPLOAD_BYTES;
+}
+
+export function isValidFileExtension(
+  file: File | { name: string },
+  fileExtensions: TYPE_OF_FILES
+) {
+  const extensions = fileExtensions.replaceAll(/[\.\,]/g, '').split(' ');
+  let ext = file.name.split('.').pop()!.toLowerCase();
+  return extensions.includes(ext);
 }

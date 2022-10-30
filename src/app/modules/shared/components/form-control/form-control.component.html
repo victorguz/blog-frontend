@@ -1,0 +1,148 @@
+<form [formGroup]="form" class="{{ formClass || 'mb-3' }}">
+  <div class="form-group">
+    <label
+      *ngIf="!hiddenLabel"
+      class="form-label"
+      :label
+      text-
+      [ngClass]="{ 'text-danger': isRequiredField() }"
+    >
+      {{ isPhrasecase ? (label | phrasecase) : label }}
+      {{ form.get(name)?.hasValidator(validator) ? "*" : "" }}</label
+    >
+    <!-- When input -->
+    <input
+      *ngIf="isInput || isDatalist"
+      [type]="inputType != 'number' ? inputType : 'text'"
+      class="form-control"
+      [attr.maxlength]="maxLength"
+      placeholder="{{
+        isPhrasecase ? (placeholder | phrasecase) : placeholder
+      }}"
+      [formControlName]="name"
+      [ngClass]="{
+        'border-danger': isRequiredField()
+      }"
+      (blur)="onBlur($event)"
+      (input)="onInput($event)"
+      (change)="onChange($event)"
+      (keyup.enter)="onEnter($event)"
+      [attr.disabled]="disabled || undefined"
+      [attr.list]="idDataList || undefined"
+      [attr.accept]="isFile ? accept : undefined"
+      #input
+    />
+    <div class="form-date" *ngIf="isDate && min">
+      <input
+        readonly
+        type="text"
+        class="form-control"
+        placeholder="{{
+          isPhrasecase ? (placeholder | phrasecase) : placeholder
+        }}"
+        [ngClass]="{
+          'cursor-pointer': !disabled,
+          'border-danger': isRequiredField()
+        }"
+        (blur)="disabled ? '' : onBlur($event)"
+        (input)="disabled ? '' : onInput($event)"
+        (click)="disabled ? '' : picker.open()"
+        [attr.disabled]="disabled || undefined"
+        [formControlName]="name"
+        [min]="min"
+        [max]="max"
+        [matDatepicker]="picker"
+        (dateChange)="onChange($event)"
+        #input
+      />
+      <mat-icon>arrow_drop_down</mat-icon>
+      <mat-datepicker-toggle
+        class="d-none"
+        matSuffix="matSuffix"
+        [for]="picker"
+      ></mat-datepicker-toggle>
+
+      <mat-datepicker #picker></mat-datepicker>
+    </div>
+
+    <textarea
+      rows="4"
+      *ngIf="isTextarea"
+      class="form-control"
+      [attr.maxlength]="maxLength"
+      placeholder="{{
+        isPhrasecase ? (placeholder | phrasecase) : placeholder
+      }}"
+      [formControlName]="name"
+      [ngClass]="{
+        'border-danger': isRequiredField()
+      }"
+      (blur)="onBlur($event)"
+      (input)="onInput($event)"
+      [attr.disabled]="disabled || undefined"
+      [attr.min]="min || undefined"
+      #input
+    ></textarea>
+    <!-- When datalist -->
+
+    <datalist
+      *ngIf="isDatalist"
+      [id]="idDataList"
+      [formControlName]="name"
+      class="w-100"
+    >
+      <option *ngFor="let item of dataSelect" [value]="item.value">
+        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
+      </option>
+    </datalist>
+    <!-- When select -->
+    <mat-select
+      *ngIf="isSelect && multiple"
+      class="form-select"
+      [formControlName]="name"
+      multiple
+      [ngClass]="{ 'border-danger': isRequiredField() }"
+      placeholder="Seleccione una opción"
+      [attr.disabled]="disabled || undefined"
+      (blur)="onBlur($event)"
+      (change)="onChange($event)"
+    >
+      <mat-option *ngFor="let item of dataSelect" [value]="item.value">
+        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
+      </mat-option>
+    </mat-select>
+
+    <select
+      *ngIf="isSelect && !multiple"
+      class="form-select"
+      [formControlName]="name"
+      [ngClass]="{ 'border-danger': isRequiredField() }"
+      [attr.disabled]="disabled || undefined"
+      (blur)="onBlur($event)"
+      (change)="onChange($event)"
+    >
+      <option value="" *ngIf="!hiddenDefault">Seleccione una opción</option>
+      <option *ngFor="let item of dataSelect" [value]="item.value">
+        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
+      </option>
+    </select>
+    <small
+      *ngIf="!hiddenError"
+      class="small text-danger opacity-0 d-flex align-items-center justify-content-between gap-2"
+      [ngClass]="{ 'opacity-0': !isRequiredField() }"
+    >
+      <span>Campo requerido</span>
+      <mat-icon
+        class="cursor-pointer material-icons-outlined"
+        *ngIf="tooltip && isRequiredField()"
+        [matTooltip]="tooltip"
+        matTooltipPosition="above"
+        matTooltipHideDelay="300"
+        matTooltipShowDelay="300"
+        matTooltipClass="background-tooltip bg-danger"
+      >
+        info
+      </mat-icon>
+    </small>
+  </div>
+</form>

@@ -1,0 +1,128 @@
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" id="table-private">
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="w-100 text-center">No se econtraron datos</div>
+      </td>
+    </tr>
+    <ng-container
+      matColumnDef="{{ column.name }}"
+      *ngFor="let column of columns"
+    >
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        class="pr-3 pl-3 bg-tertiary text-white"
+      >
+        {{ column.title | titlecase }}
+      </th>
+      <td
+        mat-cell
+        class="p-1"
+        *matCellDef="let item"
+        [ngClass]="{
+          'text-break': render(column, item).length > 43,
+          'text-wrap': render(column, item).length > 20,
+          'text-nowrap': render(column, item).length <= 20,
+          'align-items-center': column.name == 'actions',
+          'justify-content-center':
+            column.name == 'actions' && actionsOrientation == 'center',
+          'justify-content-end':
+            column.name == 'actions' && actionsOrientation == 'end',
+          'align-items-start':
+            column.name == 'actions' && actionsOrientation == 'start',
+          'd-flex': column.name == 'actions',
+          'h-100': column.name == 'actions'
+        }"
+      >
+        <ng-container *ngIf="column.name == 'actions' && item.actions">
+          <button
+            *ngFor="let action of item.actions"
+            mat-icon-button
+            (click)="
+              !isDisabledAction(action, item) ? action.accion(item, router) : ''
+            "
+            [matTooltip]="action.tooltip"
+            [matTooltipPosition]="
+              action.tooltipPosition ? action.tooltipPosition : 'above'
+            "
+            matTooltipHideDelay="300"
+            matTooltipShowDelay="1000"
+            matTooltipClass="background-tooltip"
+            [disabled]="isDisabledAction(action, item)"
+            [ngClass]="{ 'bg-light': isDisabledAction(action, item) }"
+          >
+            <img
+              [src]="action.imagen"
+              class="img-fluid"
+              alt="button-icon"
+              *ngIf="!action.icon"
+            />
+
+            <mat-icon
+              *ngIf="action.icon"
+              [class]="action.iconClass || 'material-icons-outlined'"
+              [ngStyle]="{
+                color: isDisabledAction(action, item)
+                  ? 'gray'
+                  : action.iconColor || '#f1a003'
+              }"
+            >
+              {{ getIcon(item, action.icon) }}
+            </mat-icon>
+          </button>
+        </ng-container>
+
+        <span
+          *ngIf="column.name != 'actions'"
+          class="d-flex align-items-center gap-2"
+        >
+          <div
+            *ngIf="column.statusClass"
+            class="circle-status {{
+              column.statusClass(item[column.name], item)
+            }}"
+          ></div>
+
+          {{ render(column, item) | titlecase }}
+        </span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngClass]="{ 'demo-row-is-clicked': selected.has(row) }"
+      (click)="addRowToItems(row)"
+    ></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="
+      pageSizeOptions.length > 0 ? pageSizeOptions : [5, 10, 20]
+    "
+    showFirstLastButtons
+    aria-label="Select page of periodic elements"
+    *ngIf="showTable && lengthCustomPaginator == 0"
+  >
+  </mat-paginator>
+
+  <div
+    *ngIf="lengthCustomPaginator != 0"
+    class="d-flex justify-content-around align-items-center custom_paginator"
+  >
+    <mat-icon
+      fontIcon="arrow_back_ios"
+      (click)="changePage('back')"
+      class="custom_paginator_pointer"
+    >
+    </mat-icon>
+    <p>{{ CurrentPageCustomPaginator + 1 }} de {{ pageNumber() }}</p>
+    <mat-icon
+      fontIcon="arrow_forward_ios"
+      (click)="changePage('forth')"
+      class="custom_paginator_pointer"
+    >
+    </mat-icon>
+  </div>
+</div>

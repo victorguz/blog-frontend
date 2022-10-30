@@ -3,14 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "blog": {
+    "blog-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
-        },
-        "@schematics/angular:application": {
-          "strict": true
         }
       },
       "root": "",
@@ -20,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/blog/browser",
+            "outputPath": "dist/blog-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -31,13 +28,14 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "crypto-js",
+              "crypto",
+              "html2canvas",
               "validator/lib/contains",
               "validator/lib/matches",
               "validator/lib/isLength",
@@ -98,30 +96,21 @@
               "validator/lib/isDivisibleBy",
               "validator/lib/isLatLong",
               "validator/lib/isMobilePhone",
-              "validator/lib/isMongoId",
-              "chart.js"
+              "validator/lib/isMongoId"
             ]
           },
           "configurations": {
             "production": {
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "50000kb",
+                  "maximumWarning": "20mb",
                   "maximumError": "30mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "1mb",
-                  "maximumError": "4mb"
+                  "maximumWarning": "20mb",
+                  "maximumError": "10mb"
                 }
               ],
               "fileReplacements": [
@@ -130,50 +119,33 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "media",
-              "sourceMap": false,
-              "namedChunks": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "progress": true,
-              "aot": true
+              "outputHashing": "all"
             },
-            "qas": {
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
+            "qa": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "50000kb",
+                  "maximumWarning": "20mb",
                   "maximumError": "30mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "1mb",
-                  "maximumError": "4mb"
+                  "maximumWarning": "20mb",
+                  "maximumError": "10mb"
                 }
               ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.qas.ts"
+                  "with": "src/environments/environment.qa.ts"
                 }
               ],
-              "outputHashing": "media",
-              "sourceMap": false,
-              "namedChunks": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "progress": true,
-              "aot": true
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": false
             },
             "development": {
               "buildOptimizer": false,
@@ -190,10 +162,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "blog:build:production"
+              "browserTarget": "blog-frontend:build:production"
             },
             "development": {
-              "browserTarget": "blog:build:development"
+              "browserTarget": "blog-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -201,7 +173,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "blog:build"
+            "browserTarget": "blog-frontend:build"
           }
         },
         "test": {
@@ -217,125 +189,12 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
           }
-        },
-        "serverless": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/blog/serverless",
-            "main": "serverless.ts",
-            "tsConfig": "tsconfig.serverless.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "optimization": {
-                "scripts": true
-              },
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "outputHashing": "media",
-              "sourceMap": false,
-              "namedChunks": true,
-              "extractLicenses": true,
-              "progress": true
-            },
-            "qas": {
-              "optimization": {
-                "scripts": true
-              },
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.qas.ts"
-                }
-              ],
-              "outputHashing": "media",
-              "sourceMap": false,
-              "namedChunks": true,
-              "extractLicenses": true,
-              "progress": true
-            },
-            "development": {
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "outputHashing": "media",
-              "namedChunks": true,
-              "progress": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/blog/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
-            },
-            "development": {
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@nguniversal/builders:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "blog:build:development",
-              "serverTarget": "blog:server:development"
-            },
-            "production": {
-              "browserTarget": "blog:build:production",
-              "serverTarget": "blog:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@nguniversal/builders:prerender",
-          "options": {
-            "routes": [
-              "/"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "blog:build:production",
-              "serverTarget": "blog:server:production"
-            },
-            "development": {
-              "browserTarget": "blog:build:development",
-              "serverTarget": "blog:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }
-  },
-  "defaultProject": "blog"
+  }
 }

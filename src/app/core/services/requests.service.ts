@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { getToken } from './functions.service';
-import { BasicResponse } from '../models/basic-response.model';
-import { isEmpty, isNotEmptyObject, isObject, isURL } from 'class-validator';
-import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
 import { ContentType, RequestMethod } from '../constants.config';
-import { HttpBody } from '../../shared/interfaces/shared.interfaces';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, take, timeout } from 'rxjs';
+import { isEmpty, isNotEmptyObject, isObject, isURL } from 'class-validator';
+
+import { BasicResponse } from '../interfaces/basic-response.interface';
+import { Injectable } from '@angular/core';
+import { environment } from './../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,106 +13,141 @@ import { HttpBody } from '../../shared/interfaces/shared.interfaces';
 export class RequestsService {
   constructor(private http: HttpClient) {}
 
-  private isAllowedDomain(domain: string, headers: any = undefined) {
-    const allowedDomain = environment.allowedDomains.find((dom) => {
-      return domain.includes(dom) || dom.includes(domain);
-    });
-    headers = isObject(headers) && isNotEmptyObject(headers) ? headers : {};
-    allowedDomain ? (headers['Authorization'] = 'Bearer ' + getToken()) : {};
-    return headers;
+  private createHeaders(headers: any = undefined) {
+    headers =
+      isObject(headers) && isNotEmptyObject(headers) ? headers : undefined;
+    return headers ? new HttpHeaders(headers) : headers;
   }
 
   private validateUrl(url: string) {
-    if (isEmpty(url) || isURL(url)) {
-      throw new Error('No se puede hacer el request a una url vacía');
+    if (isEmpty(url) || !isURL(url)) {
+      throw new Error('Esta url no tiene el formato requerido o está vacía.');
     }
   }
 
-  get(body: HttpBody): Observable<BasicResponse> {
-    this.validateUrl(body.url);
+  get<T>(url: string, params?: any, headers?: any | undefined): Observable<T> {
+    this.validateUrl(url);
     let paramsUrl = '';
-    body.headers = this.isAllowedDomain(body.url, body.headers);
-    body.headers = new HttpHeaders(body.headers);
+    headers = this.createHeaders(headers);
     // Recorremos los parametros para convertirlos a parametros de url
-    for (const key in body.params) {
-      if (Object.prototype.hasOwnProperty.call(body.params, key)) {
-        const value = body.params[key];
+    for (const key in params) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
+        const value = params[key];
         paramsUrl += `${key}=${value}&`;
       }
     }
-    return this.http.get<BasicResponse>(`${body.url}?${paramsUrl.toString()}`, {
-      headers: body.headers,
-    });
+    return this.http
+      .get<T>(
+        `${url}?${paramsUrl.toString()}`,
+        headers
+          ? {
+              headers,
+            }
+          : undefined
+      )
+      .pipe(take(1));
   }
 
-  delete(body: HttpBody): Observable<BasicResponse> {
-    this.validateUrl(body.url);
-    body.headers = this.isAllowedDomain(body.url, body.headers);
+  delete<T>(url: string, params?: any, headers?: any): Observable<T> {
     let paramsUrl = '';
-    body.headers = new HttpHeaders(body.headers);
+    this.validateUrl(url);
+    headers = this.createHeaders(headers);
     // Recorremos los parametros para convertirlos a parametros de url
-    for (const key in body.params) {
-      if (Object.prototype.hasOwnProperty.call(body.params, key)) {
-        const value = body.params[key];
+    for (const key in params) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
+        const value = params[key];
         paramsUrl += `${key}=${value}&`;
       }
     }
-    return this.http.delete<BasicResponse>(
-      `${body.url}?${paramsUrl.toString()}`,
-      {
-        headers: body.headers,
-      }
-    );
+    return this.http
+      .delete<T>(`${url}?${paramsUrl.toString()}`, {
+        headers: headers,
+      })
+      .pipe(take(1));
   }
 
-  post(body: HttpBody, contentType: ContentType = ContentType.JSON) {
-    return this.postByMethod(body, contentType, RequestMethod.POST);
+  post<T>(
+    url: string,
+    params?: any,
+    headers?: any,
+    contentType: ContentType = ContentType.JSON
+  ) {
+    return this.postByMethod<T>(
+      url,
+      params,
+      headers,
+      contentType,
+      RequestMethod.POST
+    ).pipe(take(1));
   }
 
-  patch(body: HttpBody, contentType: ContentType = ContentType.JSON) {
-    return this.postByMethod(body, contentType, RequestMethod.PATCH);
+  patch<T>(
+    url: string,
+    params?: any,
+    headers?: any,
+    contentType: ContentType = ContentType.JSON
+  ) {
+    return this.postByMethod<T>(
+      url,
+      params,
+      headers,
+      contentType,
+      RequestMethod.PATCH
+    ).pipe(take(1));
   }
 
-  put(body: HttpBody, contentType: ContentType = ContentType.JSON) {
-    return this.postByMethod(body, contentType, RequestMethod.PUT);
+  put<T>(
+    url: string,
+    params?: any,
+    headers?: any,
+    contentType: ContentType = ContentType.JSON
+  ) {
+    return this.postByMethod<T>(
+      url,
+      params,
+      headers,
+      contentType,
+      RequestMethod.PUT
+    ).pipe(take(1));
   }
 
-  private postByMethod(
-    body: HttpBody,
-    contentType: ContentType,
-    method: RequestMethod.POST | RequestMethod.PATCH | RequestMethod.PUT
-  ): Observable<BasicResponse> {
-    this.validateUrl(body.url);
-    body.headers = this.isAllowedDomain(body.url, body.headers);
-    body.headers['Content-Type'] = contentType;
-    body.headers = new HttpHeaders(body.headers);
+  private postByMethod<T>(
+    url: string,
+    params?: any,
+    headers?: any,
+    contentType: ContentType = ContentType.JSON,
+    method:
+      | RequestMethod.POST
+      | RequestMethod.PATCH
+      | RequestMethod.PUT = RequestMethod.POST
+  ): Observable<T> {
+    this.validateUrl(url);
+    headers = this.createHeaders({ ...headers, 'Content-Type': contentType });
     if (contentType == ContentType.FORM) {
       const paramsUrlEncoded = new URLSearchParams();
-      for (const key in body.params) {
-        if (Object.prototype.hasOwnProperty.call(body.params, key)) {
-          const element = body.params[key];
+      for (const key in params) {
+        if (Object.prototype.hasOwnProperty.call(params, key)) {
+          const element = params[key];
           paramsUrlEncoded.append(key, element);
         }
       }
-      body.params = paramsUrlEncoded.toString();
+      params = paramsUrlEncoded.toString();
     }
     switch (method) {
       case RequestMethod.POST:
-        return this.http.post<BasicResponse>(body.url, body.params, {
-          headers: body.headers,
+        return this.http.post<T>(url, params, {
+          headers: headers,
         });
 
       case RequestMethod.PATCH:
-        return this.http.patch<BasicResponse>(body.url, body.params, {
-          headers: body.headers,
+        return this.http.patch<T>(url, params, {
+          headers: headers,
         });
 
       case RequestMethod.PUT:
-        return this.http.put<BasicResponse>(body.url, body.params, {
-          headers: body.headers,
+        return this.http.put<T>(url, params, {
+          headers: headers,
         });
     }
   }
 }
-
-

@@ -1,32 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BlogComponent } from './modules/blog/components/layout/blog/blog.component';
-import { PrivateComponent } from './modules/private/components/layout/private/private.component';
+import { AuthGuard } from './core/auth/auth.guard';
+import { PrivateComponent } from './modules/private/components/private/private.component';
+import { PublicComponent } from './modules/public/components/public/public.component';
 
 const routes: Routes = [
-  {
-    path: 'blog',
-    component: BlogComponent,
-    loadChildren: () =>
-      import('./modules/blog/blog.module').then((m) => m.BlogModule),
-  },
-  { path: 'profile', pathMatch: 'prefix', redirectTo: 'blog' },
   {
     path: 'private',
     component: PrivateComponent,
     loadChildren: () =>
       import('./modules/private/private.module').then((m) => m.PrivateModule),
+    canActivate: [AuthGuard],
   },
-  { path: '**', pathMatch: 'prefix', redirectTo: 'not-found' },
-  { path: '', pathMatch: 'prefix', redirectTo: 'blog' },
+  {
+    path: 'public',
+    component: PublicComponent,
+    loadChildren: () =>
+      import('./modules/public/public.module').then((m) => m.PublicModule),
+  },
+  { path: '**', redirectTo: 'public', pathMatch: 'prefix' },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      initialNavigation: 'enabled',
-    }),
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

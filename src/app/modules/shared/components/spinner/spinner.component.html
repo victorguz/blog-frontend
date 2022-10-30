@@ -1,0 +1,18 @@
+<article class="spinner d-flex flex-column align-items-start p-3 gap-1">
+  <div class="d-flex align-items-center justify-content-between gap-3 w-100">
+    <div
+      class="d-flex align-items-center text-{{
+        data.options.color || 'primary'
+      }} gap-1"
+    >
+      <mat-icon>{{ data.options.icon || "check_circle" }}</mat-icon>
+      <strong class="fw-bolder mb-0">
+        {{ data.options.title }}
+      </strong>
+    </div>
+    <button class="btn btn-close" (click)="onOk()"></button>
+  </div>
+  <small class="body pt-1 m-0 w-100">
+    {{ data.options.message }}
+  </small>
+</article>

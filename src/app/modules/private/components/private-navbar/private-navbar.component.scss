@@ -1,0 +1,56 @@
+.logo {
+  height: 90px;
+  width: auto;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.navbarSize {
+  height: 100px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+h5,
+p {
+  margin-bottom: 0rem;
+  font-weight: 900;
+}
+
+.bottonNav {
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  width: 100px;
+  height: 100px;
+  background-color: #252525;
+  transition: 0.3s;
+}
+
+.bottonNavExpand {
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  width: 200px;
+  height: 100px;
+  background-color: #252525;
+  transition: 0.3s;
+}
+
+.backgraundColorNavBar {
+  background: rgb(241, 209, 3);
+  background: linear-gradient(
+    180deg,
+    rgba(241, 209, 3, 1) 0%,
+    rgba(241, 160, 3, 1) 100%
+  );
+}
