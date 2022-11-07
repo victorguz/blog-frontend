@@ -18,6 +18,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -39,6 +40,7 @@ import { RouterModule } from '@angular/router';
 import { SanitizePipe } from '../../core/pipes/sanitize.pipe';
 import { SecondsToHourPipe } from '../../core/pipes/seconds-to-hour.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { PaymentFormComponent } from './components/payments/payment-form/payment-form.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     FormControlComponent,
     DialogCambiarContrasenaComponent,
     CirculoEstadoAsignacionComponent,
+    PaymentFormComponent,
   ],
   imports: [
     CommonModule,
@@ -83,6 +86,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DragDropModule,
     MatSelectModule,
     MatTabsModule,
+    MatCheckboxModule,
   ],
   exports: [
     CommonModule,
@@ -99,6 +103,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DialogRecuperarContrasenaComponent,
     AuroraTableComponent,
     FormControlComponent,
+    PaymentFormComponent,
     //Material
     MatTableModule,
     MatPaginatorModule,
@@ -121,6 +126,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DragDropModule,
     MatSelectModule,
     MatTabsModule,
+    MatCheckboxModule,
   ],
   providers: [
     RequestsService,

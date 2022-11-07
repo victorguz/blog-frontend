@@ -1,16 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>BlogFrontend</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>BlogFrontend</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.wompi.co/libs/js/v1.js"
+      data-public-key="pub_test_Tw5G1yMq0kA70eJoOU77Am5x0EURHiOV"
+    ></script>
+  </head>
+  <body>
+    <app-root></app-root>
+
+    <script>
+      $wompi.initialize(function (data, error) {
+        if (error === null) {
+          const sessionId = data.sessionId;
+          sessionStorage.setItem("wompi_session_id", sessionId);
+          // `sessionId` es un string, por ejemplo: "1289_1696830983722-ab493d40c02e-278bab34-323va3"
+        }
+      });
+    </script>
+  </body>
 </html>

@@ -10,7 +10,9 @@ import { Post } from '../../dto/update-post.dto';
 export class BlogPostViewComponent implements OnInit {
   public post: Post = {
     name: 'Web site design: landing page home page ui',
-    description: `<p>Apple today named eight app and game developers receiving an Apple Design Award, each one
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vel porta arcu ac lorem tellus netus. Eget ridiculus diam nunc facilisi egestas aliquet magnis urna. Elit turpis scelerisque mattis turpis aliquam ultricies nunc',
+    content: `<p>Apple today named eight app and game developers receiving an Apple Design Award, each one
                                 selected for being thoughtful and creative. Apple Design Award winners bring distinctive
                                 new ideas to life and demonstrate deep mastery of Apple technology. The apps spring up
                                 from developers large and small, in every part of the world, and provide users with new

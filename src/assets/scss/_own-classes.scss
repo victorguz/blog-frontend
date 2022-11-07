@@ -18,6 +18,15 @@
 .text-primary-active {
   color: $primary-active;
 }
+.bg-primary-active {
+  background-color: $primary-active;
+}
+.text-tertiary {
+  color: $tertiary;
+}
+.bg-tertiary {
+  background-color: $tertiary;
+}
 
 hr {
   background-color: transparent;

@@ -1,13 +1,21 @@
+.buttons-container {
+  position: absolute;
+}
 .input-search {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 6px 12px;
-  gap: 30px;
+  gap: 15px;
 
   height: 36px;
   min-width: 300px;
   background: #e4e4e4a8;
   border-radius: 50px;
+
+  transition: all ease-in 0.2s;
+  input {
+    min-width: 260px;
+  }
 }

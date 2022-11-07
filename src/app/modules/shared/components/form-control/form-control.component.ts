@@ -62,9 +62,8 @@ export class FormControlComponent implements OnChanges {
   @Input() public hiddenError: boolean = false;
   @Input() public hiddenDefault: boolean = false;
   @Input() public formClass: string = '';
-  @Input() public idDataList: string = '';
   @Output() public changeValue = new EventEmitter<any>();
-  @Input() public value: any;
+
   @Output() public blur = new EventEmitter<any>();
   @Output() public input = new EventEmitter<any>();
   @Output() public change = new EventEmitter<any>();
@@ -86,12 +85,16 @@ export class FormControlComponent implements OnChanges {
     ) {
       this.isDirty = false;
     }
-    if (!this.form) {
-      this.form = new FormGroup({
-        [this.name]: new FormControl(),
-      });
-    } else {
-      this.value = this.form.get(this.name)?.value;
+    if (changes['form'] || changes['name']) {
+      if (!this.form) {
+        throw new Error('Debe proveer un formulario en el campo [form]');
+      }
+      if (!this.name) {
+        throw new Error('Debe proveer un nombre de control en el campo [name]');
+      }
+      if (!this.control) {
+        throw new Error('El nombre de control es inválido');
+      }
     }
     this.setComponentType();
     this.setTooltip();
@@ -99,6 +102,7 @@ export class FormControlComponent implements OnChanges {
     this.form.get(this.name)?.setValue(this.value);
     this.cdRef.detectChanges();
   }
+
   setLabel() {
     if (this.label && !this.placeholder) {
       this.placeholder = this.label;
@@ -108,6 +112,13 @@ export class FormControlComponent implements OnChanges {
       this.label = this.name;
       this.placeholder = this.name;
     }
+  }
+  private get value() {
+    return this.control?.value;
+  }
+
+  private get control() {
+    return this.form.get(this.name);
   }
   get isInput(): boolean {
     return this.componentType == 'input' && !this.type.includes('date');
@@ -140,6 +151,10 @@ export class FormControlComponent implements OnChanges {
   setComponentType() {
     if (this.type == 'select') {
       this.componentType = 'select';
+      if (!this.dataSelect || !this.dataSelect.length)
+        throw new Error(
+          `La lista de selección [name]="${this.name}" está vacía.`
+        );
     } else if (this.type == 'dataList') {
       this.componentType = 'dataList';
     } else if (this.type == 'textarea') {
@@ -247,11 +262,11 @@ export class FormControlComponent implements OnChanges {
   }
 
   get isDateGreaterThanMin() {
-    const value = this.form.get(this.name)?.value;
-
-    if (this.type.includes('date') && value) {
+    if (this.type.includes('date') && this.value) {
       const dateValue =
-        typeof value == 'string' ? transformStringToDate(value) : value;
+        typeof this.value == 'string'
+          ? transformStringToDate(this.value)
+          : this.value;
       const min = this.min as Date;
       const result = dateValue > min;
       return result;

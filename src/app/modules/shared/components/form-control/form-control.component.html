@@ -1,4 +1,21 @@
-<form [formGroup]="form" class="{{ formClass || 'mb-3' }}">
+<div class="form-group text-danger" *ngIf="!form || !name">
+  <label class="form-label"> Campo inválido</label>
+  <!-- When input -->
+  <input
+    type="text"
+    class="form-control border-danger"
+    placeholder="Debe proveer un formulario y nombre de control válido"
+    disabled
+  />
+  <small
+    class="small d-flex align-items-center justify-content-between gap-2 text-danger"
+  >
+    <span *ngIf="!form">Formulario requerido</span>
+    <span *ngIf="!name">Nombre requerido</span>
+  </small>
+</div>
+
+<form [formGroup]="form" class="{{ formClass || '' }}" *ngIf="form && name">
   <div class="form-group">
     <label
       *ngIf="!hiddenLabel"
@@ -13,8 +30,8 @@
     <!-- When input -->
     <input
       *ngIf="isInput || isDatalist"
-      [type]="inputType != 'number' ? inputType : 'text'"
       class="form-control"
+      [type]="inputType != 'number' ? inputType : 'text'"
       [attr.maxlength]="maxLength"
       placeholder="{{
         isPhrasecase ? (placeholder | phrasecase) : placeholder
@@ -28,7 +45,7 @@
       (change)="onChange($event)"
       (keyup.enter)="onEnter($event)"
       [attr.disabled]="disabled || undefined"
-      [attr.list]="idDataList || undefined"
+      list="inputDatalist"
       [attr.accept]="isFile ? accept : undefined"
       #input
     />
@@ -87,7 +104,7 @@
 
     <datalist
       *ngIf="isDatalist"
-      [id]="idDataList"
+      id="inputDatalist"
       [formControlName]="name"
       class="w-100"
     >

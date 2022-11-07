@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Post, SelectPost } from '../../dto/update-post.dto';
-import { PostsService } from '../../services/posts.service';
+import { PostsService } from '../../../../../../services/posts.service';
 
 @Component({
   selector: 'app-blog-post-overview',

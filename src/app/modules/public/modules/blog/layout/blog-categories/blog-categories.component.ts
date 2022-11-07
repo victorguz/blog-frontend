@@ -14,7 +14,7 @@ export class BlogCategoriesComponent implements OnInit {
     { id: 3, name: 'Backend', category: 'backend' },
     { id: 4, name: 'UX/UI', category: 'uxui' },
   ];
-  public showSearch: boolean = true;
+  public showSearch: boolean = false;
   constructor(
     private router: Router,
     @Inject(DOCUMENT) private document: Document,

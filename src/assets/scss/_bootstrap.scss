@@ -5,14 +5,17 @@
   box-shadow: none !important;
   font-weight: 600 !important;
   border-color: transparent !important;
+  transition: all ease-in 0.2s;
 
-  &:not(.btn-sm, .btn-lg) {
+  &:not(.btn-sm, .btn-lg, [mat-icon-button]) {
     padding: 7px 23px !important;
   }
 
-  &:hover,
-  &:active {
-    background: #0000001c;
+  &.btn-transparent {
+    &:hover,
+    &:active {
+      background: #0000001c;
+    }
   }
 
   &.btn-primary {
@@ -32,6 +35,10 @@
     &:active {
       box-shadow: none;
     }
+  }
+
+  &.btn-success {
+    color: $dark;
   }
 }
 
@@ -55,4 +62,8 @@
   border-color: transparent;
   // background-color: #ffffffa2;
   // filter: blur(5px);
+}
+
+.form-label {
+  font-weight: 500;
 }

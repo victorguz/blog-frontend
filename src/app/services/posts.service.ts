@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
-import { BasicResponse } from '../../../../../core/interfaces/basic-response.interface';
-import { RequestsService } from '../../../../../core/services/requests.service';
-import { CreatePost, Post, SelectPost } from '../dto/update-post.dto';
+import { environment } from '../../environments/environment';
+import { BasicResponse } from '../core/interfaces/basic-response.interface';
+import { RequestsService } from '../core/services/requests.service';
+import {
+  CreatePost,
+  Post,
+  SelectPost,
+} from '../modules/public/modules/blog/dto/update-post.dto';
 
 @Injectable({
   providedIn: 'root',

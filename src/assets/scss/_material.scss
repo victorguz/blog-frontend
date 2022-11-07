@@ -2,3 +2,8 @@ mat-dialog-container {
   border-radius: var(--default-radius) !important;
   padding: 0 !important;
 }
+
+mat-icon {
+  min-width: 1em !important;
+  min-height: 1em !important;
+}

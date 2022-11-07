@@ -1,6 +1,6 @@
 <a
   class="post d-flex align-items-center justify-content-center flex-column mb-5 text-dark"
-  [routerLink]="['/blog/post', item.id]"
+  [routerLink]="['/public/blog/post', item.id]"
   *ngFor="let item of posts"
 >
   <img [src]="item.image" alt="img-preview" class="post-img mb-4" />
@@ -20,7 +20,10 @@
       }}
     </p>
     <div class="d-flex align-items-center justify-content-end w-100">
-      <button class="btn btn-primary" [routerLink]="['/blog/post', item.id]">
+      <button
+        class="btn btn-primary"
+        [routerLink]="['/public/blog/post', item.id]"
+      >
         Ver publicación
       </button>
     </div>

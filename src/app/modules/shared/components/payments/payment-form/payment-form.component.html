@@ -1,0 +1,114 @@
+<ng-container *ngIf="showForm">
+  <section class="container d-flex flex-column gap-4">
+    <div class="row">
+      <form-control
+        class="col-sm-6"
+        [form]="clientForm"
+        name="name"
+        label="nombres"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-sm-6"
+        [form]="clientForm"
+        name="lastname"
+        label="apellidos"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-sm-6"
+        [form]="clientForm"
+        name="email"
+        label="correo electrónico"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-sm-6"
+        [form]="clientForm"
+        name="phone"
+        label="celular"
+        [isSubmited]="isSubmited"
+      ></form-control>
+
+      <!-- <form-control
+    class="col-sm-6"
+    [form]="transactionForm"
+    type="select"
+    name="type"
+    label="Método de pago"
+    [isSubmited]="isSubmited"
+    [dataSelect]="paymentMethodList"
+    [hiddenDefault]="true"
+    [isPhrasecase]="false"
+  ></form-control> -->
+      <div class="d-flex gap-3 overflow-auto w-100">
+        <button
+          class="btn text-nowrap"
+          *ngFor="let method of paymentMethodList"
+          [ngClass]="{
+            'btn-success': isSelectedMethod(method.value)
+          }"
+          (click)="setSelectedMethod(method.value)"
+        >
+          {{ method.description }}
+        </button>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="isCard">
+      <form-control
+        class="col-sm-6"
+        [form]="cardForm"
+        name="number"
+        label="Número de la tarjeta"
+        type="number"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-sm-6"
+        [form]="cardForm"
+        name="card_holder"
+        label="Nombre del titular"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-4"
+        [form]="cardForm"
+        name="cvc"
+        label="CVV"
+        type="number"
+        [isPhrasecase]="false"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-4"
+        [form]="cardForm"
+        name="exp_month"
+        label="mes"
+        type="number"
+        [isSubmited]="isSubmited"
+      ></form-control>
+      <form-control
+        class="col-4"
+        [form]="cardForm"
+        name="exp_year"
+        label="año"
+        type="number"
+        [isSubmited]="isSubmited"
+      ></form-control>
+    </div>
+
+    <mat-checkbox
+      (change)="toggleChecbox()"
+      [checked]="checkboxChecked"
+      class="text-wrap"
+    >
+      Acepto haber leído los
+      <a [href]="permalink" target="_blank"
+        >términos, condiciones y la política de privacidad</a
+      >
+      para hacer este pago.</mat-checkbox
+    >
+    <button class="btn btn-primary" (click)="onSubmit()">Realizar pago</button>
+  </section>
+</ng-container>

@@ -15,4 +15,10 @@ export const environment = {
     secret_key: 'VG0ZdVQMJd3ooIzLqjVbfAn3Er0YHQ',
     encryptStorage: false,
   },
+  wompy: {
+    session_id_local: 'wompi_session_id',
+    public_key: 'pub_test_Tw5G1yMq0kA70eJoOU77Am5x0EURHiOV',
+    link_sandbox: 'https://sandbox.wompi.co/v1',
+    link_production: 'https://production.wompi.co/v1',
+  },
 };

@@ -10,6 +10,9 @@ import { BlogFooterComponent } from './layout/blog-footer/blog-footer.component'
 import { BlogComponent } from './layout/blog/blog.component';
 import { BlogPostViewComponent } from './pages/blog-post-view/blog-post-view.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { BlogAutorComponent } from './components/blog-autor/blog-autor.component';
+import { BlogContentComponent } from './components/blog-content/blog-content.component';
+
 @NgModule({
   declarations: [
     BlogHomeComponent,
@@ -19,6 +22,8 @@ import { SharedModule } from '../../../shared/shared.module';
     BlogFooterComponent,
     BlogComponent,
     BlogPostViewComponent,
+    BlogAutorComponent,
+    BlogContentComponent,
   ],
   imports: [CommonModule, BlogRoutingModule, SharedModule],
 })
