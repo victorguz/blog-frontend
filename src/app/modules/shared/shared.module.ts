@@ -41,6 +41,7 @@ import { SanitizePipe } from '../../core/pipes/sanitize.pipe';
 import { SecondsToHourPipe } from '../../core/pipes/seconds-to-hour.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { PaymentFormComponent } from './components/payments/payment-form/payment-form.component';
+import { MercadoPagoFormComponent } from './components/payments/mercado-pago-form/mercado-pago-form.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { PaymentFormComponent } from './components/payments/payment-form/payment
     DialogCambiarContrasenaComponent,
     CirculoEstadoAsignacionComponent,
     PaymentFormComponent,
+    MercadoPagoFormComponent,
   ],
   imports: [
     CommonModule,

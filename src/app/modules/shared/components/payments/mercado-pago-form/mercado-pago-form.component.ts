@@ -7,14 +7,15 @@ import {
   WOMPY_PAYMENT_METHOD_LIST,
   WOMPY_PAYMENT_METHOD_TYPE,
 } from '../../../../../interfaces/wompi.interfaces';
+import { MercadoPagoService } from '../../../../../services/mercadopago.service';
 import { WompiService } from '../../../../../services/wompi.service.ts.service';
 
 @Component({
-  selector: 'app-payment-form',
-  templateUrl: './payment-form.component.html',
-  styleUrls: ['./payment-form.component.scss'],
+  selector: 'app-mercado-pago-form',
+  templateUrl: './mercado-pago-form.component.html',
+  styleUrls: ['./mercado-pago-form.component.scss'],
 })
-export class PaymentFormComponent implements OnInit {
+export class MercadoPagoFormComponent implements OnInit {
   clientForm = this.helpers.formBuilder.group({
     name: [''],
     lastname: [''],
@@ -45,8 +46,11 @@ export class PaymentFormComponent implements OnInit {
 
   constructor(
     private helpers: HelpersService,
-    private wompiService: WompiService
-  ) {}
+    private wompiService: WompiService,
+    private mercadoPagoService: MercadoPagoService
+  ) {
+    console.log(this.mercadoPagoService.MercadoPago);
+  }
 
   ngOnInit(): void {
     this.getAceptationToken();
