@@ -11,10 +11,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/blog/blog.module').then((m) => m.BlogModule),
   },
-  {
-    path: 'payments',
-    component: MercadoPagoFormComponent,
-  },
+
+  { path: '' },
   { path: '**', redirectTo: 'blog', pathMatch: 'prefix' },
 ];
 
