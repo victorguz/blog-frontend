@@ -7,12 +7,5 @@ import { MenuService } from '../../../../core/services/menu.service';
   templateUrl: './private-sidebar.component.html',
   styleUrls: ['./private-sidebar.component.scss'],
 })
-export class PrivateSidebarComponent implements OnInit {
-  sideData: MenuOption[] = [];
-
-  constructor(private menuService: MenuService) {}
-
-  ngOnInit(): void {
-    this.sideData = this.menuService.getSidebarData();
-  }
+export class PrivateSidebarComponent{
 }

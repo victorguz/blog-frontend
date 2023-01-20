@@ -1,27 +1,7 @@
-<div class="private-content">
-  <app-private-navbar (isExpand)="expand = $event"></app-private-navbar>
-  <div class="col d-flex w-100" style="display: flex">
-    <app-private-sidebar *ngIf="expand"></app-private-sidebar>
-    <article class="article-content position-relative">
-      <section
-        class="aurora-private-back-container p-3 pb-3 d-none align-items-center gap-3"
-      >
-        <a
-          mat-icon-button
-          class="aurora-private-back-link fw-bold"
-          href="/private/home"
-          #backButton
-        >
-          <mat-icon class="text-tertiary">arrow_back</mat-icon>
-        </a>
-        <h5 class="aurora-private-back-description fw-bolder m-0"></h5>
-      </section>
-
-      <section class="container-50">
-        <div class="w-100 pt-3">
-          <router-outlet></router-outlet>
-        </div>
-      </section>
-    </article>
-  </div>
-</div>
+<section class="container-fluid background">
+  <app-navbar></app-navbar>
+  <article class="content">
+    <router-outlet></router-outlet>
+  </article>
+  <app-footer></app-footer>
+</section>

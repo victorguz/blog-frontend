@@ -22,6 +22,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MaterialModule } from './material.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { CargarArchivoComponent } from './components/cargar-archivo/cargar-archivo.component';
+import { FormTextComponent } from './components/form-text/form-text.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { FooterComponent } from './components/footer/footer.component';
     CirculoEstadoAsignacionComponent,
     NavbarComponent,
     FooterComponent,
+    CargarArchivoComponent,
+    FormTextComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +70,8 @@ import { FooterComponent } from './components/footer/footer.component';
     FormControlComponent,
     NavbarComponent,
     FooterComponent,
+    CargarArchivoComponent,
+    FormTextComponent,
     //Material
     MaterialModule,
   ],

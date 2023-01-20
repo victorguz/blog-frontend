@@ -1,18 +1,29 @@
 // Use export const to declare global variables here
 // try to don't use environment variables or secret keys here
-export const APP_TITLE = 'Bombapp';
+export const APP_TITLE = 'Victorguzweb';
 export const MENSAJES = {
-  USUARIO_INEXISTENTE:
-    'No hay ninguna cuenta asociada a este correo electrónico.',
+  CAMPO_REQUERIDO: 'Este campo es requerido',
+  CAMPO_INVALIDO: 'Seleccione una opción válida',
+  ELIMINAR_EXITOSO: `Los datos han sido eliminados exitosamente`,
+  GUARDAR_EXITOSO: `Los datos han sido guardados exitosamente`,
+  GUARDAR_ERROR: `Ocurrió un error al tratar de guardar los datos`,
   EXITO_GENERAL: {
     message: 'Acción realizada exitosamente',
     title: 'Todo salió bien',
   },
   ERROR_GENERAL: {
-    message:
-      'Lo sentimos, algo salió mal con esta acción, vuelve a intentarlo mas tarde',
+    message: 'Error al realizar esta acción',
     title: 'Algo salió mal',
   },
+  SALIR: {
+    message: `¿Desea descartar los cambios que no se hayan guardado?
+    <br>
+    <br>Esta acción no se puede revertir.
+    `,
+    title: 'Salir',
+  },
+  USUARIO_INEXISTENTE:
+    'No hay ninguna cuenta asociada a este correo electrónico.',
   RESTAURAR_CONTRASENA: {
     title: '¡Enviamos un correo!',
     message: 'Enviamos las instrucciones al correo.',
@@ -136,8 +147,10 @@ export const MAT_DATE_FORMAT = {
 };
 
 export enum TYPE_OF_FILES {
+  PDF = '.pdf',
   MEDIA = '.mp4, .mov, .jpg, .jpeg, .png',
   ALL = '.mp4, .mov, .jpg, .jpeg, .png, .docx, .xlsx, .pptx, .txt, .pdf, .csv',
+  IMAGEN = '.png, .jpg, .jpeg',
 }
 
 export const CONSTANTS = {

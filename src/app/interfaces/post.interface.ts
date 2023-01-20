@@ -1,3 +1,4 @@
+import { FormControl } from "@angular/forms";
 import { FindDto } from "../core/dtos/find.dto";
 
 export interface UpdatePost {
@@ -17,6 +18,16 @@ export interface CreatePost {
   status: string;
   image: string;
   category: string;
+}
+
+export interface CreatePostForm  {
+  name: FormControl<string>;
+  description: FormControl<string>;
+  content: FormControl<string>;
+  tags: FormControl<string>;
+  status: FormControl<string>;
+  image: FormControl<string>;
+  category: FormControl<string>;
 }
 
 export interface SelectPost extends Partial<FindDto>,Partial<Post> {}

@@ -1,1 +1,59 @@
-<p>create-post works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="row">
+        <form-control
+          class="col-lg-12"
+          type="text"
+          [form]="form"
+          name="title"
+          label="Titulo"
+        ></form-control>
+
+        <form-control
+          class="col-lg-12"
+          type="textarea"
+          [form]="form"
+          name="content"
+          label="content"
+        ></form-control>
+
+       <cargar-archivo>
+
+       </cargar-archivo>
+
+
+        <form-control
+          class="col-lg-12"
+          type="textarea"
+          [form]="form"
+          name="description"
+          label="description"
+        ></form-control>
+      </div>
+    </div>
+    <div class="col-lg-4">
+ <form-control
+          type="text"
+          [form]="form"
+          name="tags"
+          label="tags"
+        ></form-control>
+        <form-control
+          type="text"
+          [form]="form"
+          name="category"
+          label="category"
+        ></form-control>
+          <form-control
+          class="col-lg-12"
+          type="text"
+          [form]="form"
+          name="status"
+          label="status"
+        ></form-control>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Crear post</button>
+</div>

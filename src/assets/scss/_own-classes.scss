@@ -37,3 +37,26 @@ hr {
     transparent
   );
 }
+
+.container-fluid {
+  &.background {
+    background: url("/assets/images/svg/mask.svg") no-repeat top center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100%;
+    overflow-y: auto;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+  }
+}

@@ -476,6 +476,7 @@ export function transformStringToDate(date: string): Date | null {
   return newDate;
 }
 
+
 export function isValidFileSize(
   file: File,
   MAX_UPLOAD_BYTES: number = environment.MAX_UPLOAD_BYTES
@@ -487,7 +488,11 @@ export function isValidFileExtension(
   file: File | { name: string },
   fileExtensions: TYPE_OF_FILES
 ) {
-  const extensions = fileExtensions.replaceAll(/[\.\,]/g, '').split(' ');
+  const extensions = fileExtensions
+    .replaceAll(/[\.\,]/g, '')
+    .toLowerCase()
+    .split(' ');
+
   let ext = file.name.split('.').pop()!.toLowerCase();
   return extensions.includes(ext);
 }

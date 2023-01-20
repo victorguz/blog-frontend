@@ -19,6 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { NgModule } from '@angular/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { NgModule } from '@angular/core';
     MatSelectModule,
     MatTabsModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
   ],
   exports: [
     MatTableModule,
@@ -68,6 +70,7 @@ import { NgModule } from '@angular/core';
     MatSelectModule,
     MatTabsModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
   ],
   providers: [],
 })
