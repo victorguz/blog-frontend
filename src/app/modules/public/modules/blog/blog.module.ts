@@ -3,24 +3,20 @@ import { CommonModule } from '@angular/common';
 
 import { BlogRoutingModule } from './blog-routing.module';
 import { BlogHomeComponent } from './pages/blog-home/blog-home.component';
-import { BlogNavbarComponent } from './layout/blog-navbar/blog-navbar.component';
-import { BlogCategoriesComponent } from './layout/blog-categories/blog-categories.component';
-import { BlogPostOverviewComponent } from './layout/blog-post-overview/blog-post-overview.component';
-import { BlogFooterComponent } from './layout/blog-footer/blog-footer.component';
-import { BlogComponent } from './layout/blog/blog.component';
-import { BlogPostViewComponent } from './pages/blog-post-view/blog-post-view.component';
+import { BlogCategoriesComponent } from './components/blog-categories/blog-categories.component';
+import { BlogPostOverviewComponent } from './components/blog-post-overview/blog-post-overview.component';
+import { BlogComponent } from './components/blog/blog.component';
+import { BlogPostViewComponent } from './pages/post-view/post-view.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { BlogAutorComponent } from './components/blog-autor/blog-autor.component';
 import { BlogContentComponent } from './components/blog-content/blog-content.component';
 
 @NgModule({
   declarations: [
+    BlogComponent,
     BlogHomeComponent,
-    BlogNavbarComponent,
     BlogCategoriesComponent,
     BlogPostOverviewComponent,
-    BlogFooterComponent,
-    BlogComponent,
     BlogPostViewComponent,
     BlogAutorComponent,
     BlogContentComponent,

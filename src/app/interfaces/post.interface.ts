@@ -1,4 +1,4 @@
-import { FindDto } from '../../../../../core/dtos/find.dto';
+import { FindDto } from "../core/dtos/find.dto";
 
 export interface UpdatePost {
   id?: number;
@@ -19,17 +19,16 @@ export interface CreatePost {
   category: string;
 }
 
-export interface SelectPost extends FindDto, Post { }
-
+export interface SelectPost extends Partial<FindDto>,Partial<Post> {}
 
 export interface Post {
-  id?: number;
-  name?: string;
-  description?: string;
-  content?: string;
-  image?: string;
-  tags?: string;
-  category?: string;
-  created_date?: Date;
-  modified_date?: Date;
+  id: number;
+  name: string;
+  description: string;
+  content: string;
+  image: string;
+  tags: string;
+  category: string;
+  created_date: Date;
+  modified_date: Date;
 }

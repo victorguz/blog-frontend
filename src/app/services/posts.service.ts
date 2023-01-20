@@ -1,28 +1,23 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { BasicResponse } from '../core/interfaces/basic-response.interface';
-import { RequestsService } from '../core/services/requests.service';
-import {
-  CreatePost,
-  Post,
-  SelectPost,
-} from '../modules/public/modules/blog/dto/update-post.dto';
+import { CreatePost, Post, SelectPost } from '../interfaces/post.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
-  constructor(private requestsService: RequestsService) {}
+  constructor(private http: HttpClient) {}
 
   findAll(body?: SelectPost) {
-    return this.requestsService.get<BasicResponse<Post[]>>(
-      `${environment.API}/posts`,
-      body
-    );
+    return this.http.get<BasicResponse<Post[]>>(`${environment.API}/posts`, {
+      params: body as any,
+    });
   }
 
   create(body?: CreatePost) {
-    return this.requestsService.post<BasicResponse<Post[]>>(
+    return this.http.post<BasicResponse<Post[]>>(
       `${environment.API}/posts`,
       body
     );

@@ -1,0 +1,49 @@
+<ng-container *ngIf="posts && posts.length > 0">
+  <a
+    class="post d-flex align-items-center justify-content-center flex-column mb-5 text-dark"
+    [routerLink]="['/public/blog/post', item.id]"
+    *ngFor="let item of posts"
+  >
+    <img [src]="item.image" alt="img-preview" class="post-img mb-4" />
+    <div class="description">
+      <h1 class="fw-bold">
+        {{
+          item.name!.length > 70
+            ? item.name!.substring(0, 70).trim() + "..."
+            : item.name
+        }}
+      </h1>
+      <p class="px-md-4">
+        {{
+          item.description!.length > 220
+            ? item.description!.substring(0, 220).trim() + "..."
+            : item.description
+        }}
+      </p>
+      <div class="d-flex align-items-center justify-content-end w-100">
+        <button
+          class="btn btn-primary"
+          [routerLink]="['/public/blog/post', item.id]"
+        >
+          Ver publicación
+        </button>
+      </div>
+    </div>
+  </a>
+
+  <div class="d-flex align-items-center justify-content-center">
+    <button class="btn btn-outline-primary bg-white" (click)="findPosts(10)">
+      Cargar más
+    </button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!posts || posts.length == 0">
+  <div class="not-found text-dark">
+    <div class="number ">404</div>
+    <span   *ngIf="!category">Lo siento, parece que aún no hay nada que mostrar</span>
+    <span   *ngIf="category">
+      ¡Uy! ¡Que pena! aún no tengo nada en esta sección :C
+    </span>
+  </div>
+</ng-container>

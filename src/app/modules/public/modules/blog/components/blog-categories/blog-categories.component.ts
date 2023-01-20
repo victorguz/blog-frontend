@@ -9,15 +9,34 @@ import { Router } from '@angular/router';
 })
 export class BlogCategoriesComponent implements OnInit {
   public categories = [
-    { id: 1, name: 'Home', category: 'home' },
-    { id: 2, name: 'Frontend', category: 'frontend' },
-    { id: 3, name: 'Backend', category: 'backend' },
-    { id: 4, name: 'UX/UI', category: 'uxui' },
+    {
+      id: 1,
+      name: 'Home',
+      category: 'home',
+      route: '/public/blog/home',
+    },
+    {
+      id: 2,
+      name: 'Frontend',
+      category: 'frontend',
+      route: '/public/blog/category',
+    },
+    {
+      id: 3,
+      name: 'Backend',
+      category: 'backend',
+      route: '/public/blog/category',
+    },
+    {
+      id: 4,
+      name: 'UX/UI',
+      category: 'uxui',
+      route: '/public/blog/category',
+    },
   ];
   public showSearch: boolean = false;
   constructor(
     private router: Router,
-    @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: any
   ) {}
 

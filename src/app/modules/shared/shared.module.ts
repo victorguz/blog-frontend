@@ -35,13 +35,13 @@ import { MatTreeModule } from '@angular/material/tree';
 import { NgModule } from '@angular/core';
 import { NotificacionesService } from '../../core/services/notificaciones.service';
 import { PhrasecasePipe } from '../../core/pipes/phrasecase.pipe';
-import { RequestsService } from '../../core/services/requests.service';
 import { RouterModule } from '@angular/router';
 import { SanitizePipe } from '../../core/pipes/sanitize.pipe';
 import { SecondsToHourPipe } from '../../core/pipes/seconds-to-hour.pipe';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-import { PaymentFormComponent } from './components/payments/payment-form/payment-form.component';
-import { MercadoPagoFormComponent } from './components/payments/mercado-pago-form/mercado-pago-form.component';
+import { MaterialModule } from './material.module';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +57,8 @@ import { MercadoPagoFormComponent } from './components/payments/mercado-pago-for
     FormControlComponent,
     DialogCambiarContrasenaComponent,
     CirculoEstadoAsignacionComponent,
-    PaymentFormComponent,
-    MercadoPagoFormComponent,
+    NavbarComponent,
+    FooterComponent,
   ],
   imports: [
     CommonModule,
@@ -67,28 +67,7 @@ import { MercadoPagoFormComponent } from './components/payments/mercado-pago-for
     HttpClientModule,
     RouterModule,
     //Material
-    MatTableModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatMenuModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatSliderModule,
-    DragDropModule,
-    MatSelectModule,
-    MatTabsModule,
-    MatCheckboxModule,
+    MaterialModule,
   ],
   exports: [
     CommonModule,
@@ -105,33 +84,12 @@ import { MercadoPagoFormComponent } from './components/payments/mercado-pago-for
     DialogRecuperarContrasenaComponent,
     AuroraTableComponent,
     FormControlComponent,
-    PaymentFormComponent,
+    NavbarComponent,
+    FooterComponent,
     //Material
-    MatTableModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTreeModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatMenuModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatSliderModule,
-    DragDropModule,
-    MatSelectModule,
-    MatTabsModule,
-    MatCheckboxModule,
+    MaterialModule,
   ],
   providers: [
-    RequestsService,
     NotificacionesService,
     AuthService,
     IndexedDBService,

@@ -10,7 +10,7 @@ import {
   LOGIN_ROUTE,
   ROUTE_ON_LOGIN,
 } from '../constants.config';
-import { FUNCIONALIDADES_SISTEMA, ROLES_USUARIOS } from '../role.config';
+import { FUNCIONALIDADES_SISTEMA } from '../role.config';
 import { Observable, Subject } from 'rxjs';
 import {
   arrayNotEmpty,
@@ -28,16 +28,16 @@ import { FORBIDDEN_ROUTE } from './../constants.config';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { NotificacionesService } from './../services/notificaciones.service';
-import { RequestsService } from '../services/requests.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(
-    private req: RequestsService,
+    private req: HttpClient,
     private router: Router,
     private jwtHelper: JwtHelperService,
     private notificaciones: NotificacionesService

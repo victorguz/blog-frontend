@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BlogHomeComponent } from './pages/blog-home/blog-home.component';
-import { BlogPostViewComponent } from './pages/blog-post-view/blog-post-view.component';
+import { BlogPostViewComponent } from './pages/post-view/post-view.component';
 
 const routes: Routes = [
   { path: 'home', component: BlogHomeComponent, data: { title: 'Blog' } },
