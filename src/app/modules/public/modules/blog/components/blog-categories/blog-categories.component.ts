@@ -1,6 +1,8 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-blog-categories',
@@ -8,12 +10,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./blog-categories.component.scss'],
 })
 export class BlogCategoriesComponent implements OnInit {
+  public formControl = new FormControl('');
+
   public categories = [
     {
       id: 1,
       name: 'Home',
       category: 'home',
-      route: '/public/blog/home',
+      route: '/public/blog',
     },
     {
       id: 2,
@@ -34,11 +38,31 @@ export class BlogCategoriesComponent implements OnInit {
       route: '/public/blog/category',
     },
   ];
-  public showSearch: boolean = false;
+  public showSearch: boolean = true;
+  public category: string = '';
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+  ) {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params && params['category']) {
+        this.formControl.reset();
+        this.category = params['category'];
+      }
+    });
+
+    this.formControl.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
+      console.log(value);
+      if (value) {
+        this.router.navigate(['', this.category], {
+          queryParams: {
+            search: value,
+          },
+        });
+      }
+    });
+  }
 
   ngOnInit(): void {}
 

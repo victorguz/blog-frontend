@@ -16,13 +16,24 @@
   align-items: center;
   justify-content: center;
 
+  text-align: center;
   .number {
     font-size: 300px;
     font-weight: 900;
     line-height: 1em;
+
+    @media screen and (max-width:768px) {
+    font-size: 200px;
+    }
+
+    @media screen and (max-width:480px) {
+    font-size: 100px;
+    }
   }
 
   span {
+    @media screen and (min-width:768px) {
     font-size: 1.3rem;
+    }
   }
 }
