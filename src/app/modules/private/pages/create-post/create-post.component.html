@@ -6,20 +6,22 @@
           class="col-lg-12"
           type="text"
           [form]="form"
-          name="title"
-          label="Titulo"
+          name="name"
+          label="Título"
         ></form-control>
 
+        <text-editor>
+
+        </text-editor>
         <form-control
           class="col-lg-12"
           type="textarea"
           [form]="form"
           name="content"
-          label="content"
+          label="Contenido"
         ></form-control>
 
-       <cargar-archivo>
-
+       <cargar-archivo class="mt-3 mb-3">
        </cargar-archivo>
 
 
@@ -28,7 +30,7 @@
           type="textarea"
           [form]="form"
           name="description"
-          label="description"
+          label="Cescripción"
         ></form-control>
       </div>
     </div>

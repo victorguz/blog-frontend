@@ -1,165 +1,162 @@
-<div class="form-group text-danger" *ngIf="!form || !name">
-  <label class="form-label"> Campo inválido</label>
-  <!-- When input -->
-  <input
-    type="text"
-    class="form-control border-danger"
-    placeholder="Debe proveer un formulario y nombre de control válido"
-    disabled
-  />
-  <small
-    class="small d-flex align-items-center justify-content-between gap-2 text-danger"
-  >
-    <span *ngIf="!form">Formulario requerido</span>
-    <span *ngIf="!name">Nombre requerido</span>
-  </small>
-</div>
-
-<form [formGroup]="form" class="{{ formClass || '' }}" *ngIf="form && name">
-  <div class="form-group">
-    <label
-      *ngIf="!hiddenLabel"
-      class="form-label"
-      :label
-      text-
-      [ngClass]="{ 'text-danger': isRequiredField() }"
-    >
-      {{ isPhrasecase ? (label | phrasecase) : label }}
-      {{ form.get(name)?.hasValidator(validator) ? "*" : "" }}</label
-    >
-    <!-- When input -->
+<form [formGroup]="form">
+  <mat-form-field class="w-100" appearance="outline" *ngIf="isInput">
+    <mat-label *ngIf="!hiddenLabel">{{ label || name }}</mat-label>
     <input
-      *ngIf="isInput || isDatalist"
-      class="form-control"
-      [type]="inputType != 'number' ? inputType : 'text'"
-      [attr.maxlength]="maxLength"
-      placeholder="{{
-        isPhrasecase ? (placeholder | phrasecase) : placeholder
-      }}"
+      matInput
+      [type]="type"
+      [placeholder]="placeholder"
       [formControlName]="name"
-      [ngClass]="{
-        'border-danger': isRequiredField()
-      }"
+      [maxlength]="maxlength"
       (blur)="onBlur($event)"
       (input)="onInput($event)"
       (change)="onChange($event)"
       (keyup.enter)="onEnter($event)"
-      [attr.disabled]="disabled || undefined"
-      list="inputDatalist"
-      [attr.accept]="isFile ? accept : undefined"
-      #input
+      [attr.min]="minNumber"
+      [attr.max]="maxNumber"
     />
-    <div class="form-date" *ngIf="isDate && min">
-      <input
-        readonly
-        type="text"
-        class="form-control"
-        placeholder="{{
-          isPhrasecase ? (placeholder | phrasecase) : placeholder
-        }}"
-        [ngClass]="{
-          'cursor-pointer': !disabled,
-          'border-danger': isRequiredField()
-        }"
-        (blur)="disabled ? '' : onBlur($event)"
-        (input)="disabled ? '' : onInput($event)"
-        (click)="disabled ? '' : picker.open()"
-        [attr.disabled]="disabled || undefined"
-        [formControlName]="name"
-        [min]="min"
-        [max]="max"
-        [matDatepicker]="picker"
-        (dateChange)="onChange($event)"
-        #input
-      />
-      <mat-icon>arrow_drop_down</mat-icon>
-      <mat-datepicker-toggle
-        class="d-none"
-        matSuffix="matSuffix"
-        [for]="picker"
-      ></mat-datepicker-toggle>
+    <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+    <button
+      *ngIf="isPassword"
+      mat-icon-button
+      matSuffix
+      type="button"
+      (click)="hidePassword = !hidePassword"
+    >
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
 
-      <mat-datepicker #picker></mat-datepicker>
-    </div>
+    <mat-error>{{ error }}</mat-error>
+  </mat-form-field>
 
+  <mat-form-field class="w-100" appearance="outline" *ngIf="isTextarea">
+    <mat-label *ngIf="!hiddenLabel">{{ label }}</mat-label>
     <textarea
-      rows="4"
-      *ngIf="isTextarea"
-      class="form-control"
-      [attr.maxlength]="maxLength"
-      placeholder="{{
-        isPhrasecase ? (placeholder | phrasecase) : placeholder
-      }}"
+      matInput
+      [placeholder]="placeholder"
       [formControlName]="name"
-      [ngClass]="{
-        'border-danger': isRequiredField()
-      }"
+      [maxlength]="maxlength"
       (blur)="onBlur($event)"
       (input)="onInput($event)"
-      [attr.disabled]="disabled || undefined"
-      [attr.min]="min || undefined"
-      #input
-    ></textarea>
-    <!-- When datalist -->
-
-    <datalist
-      *ngIf="isDatalist"
-      id="inputDatalist"
-      [formControlName]="name"
-      class="w-100"
-    >
-      <option *ngFor="let item of dataSelect" [value]="item.value">
-        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
-      </option>
-    </datalist>
-    <!-- When select -->
-    <mat-select
-      *ngIf="isSelect && multiple"
-      class="form-select"
-      [formControlName]="name"
-      multiple
-      [ngClass]="{ 'border-danger': isRequiredField() }"
-      placeholder="Seleccione una opción"
-      [attr.disabled]="disabled || undefined"
-      (blur)="onBlur($event)"
       (change)="onChange($event)"
+      (keyup.enter)="onEnter($event)"
+      [rows]="rows"
+    ></textarea>
+    <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+    <button
+      *ngIf="isPassword"
+      mat-icon-button
+      matSuffix
+      type="button"
+      (click)="hidePassword = !hidePassword"
     >
-      <mat-option *ngFor="let item of dataSelect" [value]="item.value">
-        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+
+    <mat-error>{{ error }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="w-100" appearance="outline" *ngIf="isSelect">
+    <mat-label *ngIf="!hiddenLabel">{{ label || name }}</mat-label>
+    <mat-select
+      [formControlName]="name"
+      (selectionChange)="onChange($event)"
+      [multiple]="multiple"
+    >
+      <mat-select-trigger>
+        <span>{{ selectedDescriptionSelect }}</span>
+      </mat-select-trigger>
+      <mat-option disabled> Seleccione</mat-option>
+      <mat-option
+        *ngFor="let item of dataSelect"
+        [value]="item.value"
+        [disabled]="item.disabled || false"
+      >
+        <div
+          matPrefix
+          *ngIf="item.statusClass"
+          class="circle-status me-1 {{ item.statusClass }}"
+        ></div>
+        <span>{{ item.description }}</span>
+
+        <div *ngIf="item.details" class="suffix ms-3">
+          {{ item.details }}
+        </div>
       </mat-option>
     </mat-select>
+    <mat-error>{{ error }}</mat-error>
+  </mat-form-field>
 
-    <select
-      *ngIf="isSelect && !multiple"
-      class="form-select"
+  <mat-form-field
+    class="w-100"
+    appearance="outline"
+    *ngIf="isDate"
+    (click)="picker.open()"
+  >
+    <mat-label *ngIf="!hiddenLabel">{{ label || name }}</mat-label>
+    <input
+      matInput
       [formControlName]="name"
-      [ngClass]="{ 'border-danger': isRequiredField() }"
-      [attr.disabled]="disabled || undefined"
+      [placeholder]="placeholder"
+      [matDatepicker]="picker"
+      [min]="minDate"
+      [max]="maxDate"
+      readonly=""
       (blur)="onBlur($event)"
+      (input)="onInput($event)"
       (change)="onChange($event)"
-    >
-      <option value="" *ngIf="!hiddenDefault">Seleccione una opción</option>
-      <option *ngFor="let item of dataSelect" [value]="item.value">
-        {{ isPhrasecase ? (item.description | phrasecase) : item.description }}
-      </option>
-    </select>
-    <small
-      *ngIf="!hiddenError"
-      class="small text-danger opacity-0 d-flex align-items-center justify-content-between gap-2"
-      [ngClass]="{ 'opacity-0': !isRequiredField() }"
-    >
-      <span>Campo requerido</span>
-      <mat-icon
-        class="cursor-pointer material-icons-outlined"
-        *ngIf="tooltip && isRequiredField()"
-        [matTooltip]="tooltip"
-        matTooltipPosition="above"
-        matTooltipHideDelay="300"
-        matTooltipShowDelay="300"
-        matTooltipClass="background-tooltip bg-danger"
+      (keyup.enter)="onEnter($event)"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error>{{ error }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="w-100" appearance="outline" *ngIf="isAutocomplete">
+    <mat-label *ngIf="!hiddenLabel">
+      {{ label || name }}
+    </mat-label>
+    <ng-container *ngIf="dataSelect && dataSelect.length > 0">
+      <input
+        matInput
+        [formControlName]="name"
+        [placeholder]="placeholder"
+        (input)="filterAutocomplete(autoCompleteInput.value, $event)"
+        (focus)="filterAutocomplete(autoCompleteInput.value, undefined)"
+        (blur)="onBlur($event)"
+        [matAutocomplete]="auto"
+        #autoCompleteInput
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="onChange($event)"
+        [displayWith]="displayFn"
       >
-        info
-      </mat-icon>
-    </small>
-  </div>
+        <mat-option *ngFor="let option of autoCompleteOptions" [value]="option">
+          {{ option.description }}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
+    <ng-container *ngIf="!dataSelect || dataSelect.length == 0">
+      <input
+        matInput
+        [formControlName]="name"
+        [placeholder]="placeholder"
+        (input)="filterAutocomplete(autoCompleteInput.value, $event)"
+        (focus)="filterAutocomplete(autoCompleteInput.value, undefined)"
+        (blur)="onBlur($event)"
+        [matAutocomplete]="auto"
+        #autoCompleteInput
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="onChange($event)"
+        [displayWith]="displayFn"
+      >
+        <mat-option *ngFor="let option of autoCompleteOptions" [value]="option">
+          {{ option.description }}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
+    <mat-error>{{ error }}</mat-error>
+  </mat-form-field>
 </form>

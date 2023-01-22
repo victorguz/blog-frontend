@@ -6,9 +6,7 @@ import { AuroraTableComponent } from './components/table/table.component';
 import { AuthInterceptor } from '../../core/auth/auth.interceptor';
 import { AuthService } from '../../core/auth/auth.service';
 import { CirculoEstadoAsignacionComponent } from './components/circulo-estado-asignacion/circulo-estado-asignacion.component';
-import { DialogCambiarContrasenaComponent } from './components/dialog-cambiar-contrasena/dialog-cambiar-contrasena.component';
 import { DialogComponent } from './components/dialog/dialog.component';
-import { DialogRecuperarContrasenaComponent } from './components/dialog-recuperar-contrasena/dialog-recuperar-contrasena.component';
 import { FormControlComponent } from './components/form-control/form-control.component';
 import { IndexedDBService } from './../../core/services/indexed-db.service';
 import { JWT_OPTIONS } from '@auth0/angular-jwt';
@@ -23,7 +21,7 @@ import { MaterialModule } from './material.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CargarArchivoComponent } from './components/cargar-archivo/cargar-archivo.component';
-import { FormTextComponent } from './components/form-text/form-text.component';
+import { TextEditorComponent } from './components/text-editor/text-editor.component';
 
 @NgModule({
   declarations: [
@@ -34,15 +32,13 @@ import { FormTextComponent } from './components/form-text/form-text.component';
     // Components
     DialogComponent,
     SpinnerComponent,
-    DialogRecuperarContrasenaComponent,
     AuroraTableComponent,
     FormControlComponent,
-    DialogCambiarContrasenaComponent,
     CirculoEstadoAsignacionComponent,
     NavbarComponent,
     FooterComponent,
     CargarArchivoComponent,
-    FormTextComponent,
+    TextEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -65,13 +61,12 @@ import { FormTextComponent } from './components/form-text/form-text.component';
     // Components
     DialogComponent,
     SpinnerComponent,
-    DialogRecuperarContrasenaComponent,
     AuroraTableComponent,
     FormControlComponent,
     NavbarComponent,
     FooterComponent,
     CargarArchivoComponent,
-    FormTextComponent,
+    TextEditorComponent,
     //Material
     MaterialModule,
   ],

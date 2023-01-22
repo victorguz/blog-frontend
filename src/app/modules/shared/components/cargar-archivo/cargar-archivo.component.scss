@@ -3,8 +3,7 @@
   height: 80px;
 
   .files {
-    background: #e4e8ec;
-    border: 2px dashed #9fadba;
+    opacity: 0;
     border-radius: 8px;
 
     width: 100%;
@@ -20,7 +19,7 @@
   }
 
   .texto-interno {
-    background: #e4e8ec;
+    background: transparent;
     border: 2px dashed #9fadba;
     border-radius: 8px;
 

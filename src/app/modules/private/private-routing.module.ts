@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreatePostComponent } from './create-post/create-post.component';
+import { PageConfigurationGuard } from '../../core/auth/page-configuration.guard';
+import { CreatePostComponent } from './pages/create-post/create-post.component';
 
 const routes: Routes = [
-  { path: 'post/new', component: CreatePostComponent },
-  { path: '**', redirectTo: 'home', pathMatch: 'prefix' },
+  {
+    path: 'post/new',
+    component: CreatePostComponent,
+    data: { title: 'Nuevo post' },
+    canActivate: [PageConfigurationGuard],
+  },
+  { path: '**', redirectTo: '', pathMatch: 'prefix' },
 ];
 
 @NgModule({

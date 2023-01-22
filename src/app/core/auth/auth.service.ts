@@ -23,7 +23,6 @@ import {
 import { getFromLocal, setOnLocal } from '../services/functions.service';
 
 import { BasicResponse } from '../interfaces/basic-response.interface';
-import { DialogCambiarContrasenaComponent } from './../../modules/shared/components/dialog-cambiar-contrasena/dialog-cambiar-contrasena.component';
 import { FORBIDDEN_ROUTE } from './../constants.config';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -207,14 +206,11 @@ export class AuthService {
     if (!permiso || !permiso[accion]) this.router.navigate([FORBIDDEN_ROUTE]);
   }
 
-  /**
-   * @description abre el modal de cambio de contraseña
-   */
   modalCambiarContrasena() {
-    this.notificaciones.modalComponent({
-      component: DialogCambiarContrasenaComponent,
-      width: '600px',
-      options: this.usuario,
-    });
+    // this.notificaciones.modalComponent({
+    //   component: DialogCambiarContrasenaComponent,
+    //   width: '600px',
+    //   options: this.usuario,
+    // });
   }
 }

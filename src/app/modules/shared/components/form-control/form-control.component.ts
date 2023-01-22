@@ -1,27 +1,17 @@
 import {
-  ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
   Input,
+  ChangeDetectorRef,
   OnChanges,
-  Output,
   SimpleChanges,
-  ViewChild,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { isEmail, isEmpty, isNumber, isNumberString } from 'class-validator';
-import {
-  isPassword,
-  isValidFileExtension,
-  isValidFileSize,
-  matchString,
-  transformStringToDate,
-} from '../../../../core/services/functions.service';
-
-import { DatePipe } from '@angular/common';
-import { TYPE_OF_FILES } from './../../../../core/constants.config';
-import { environment } from '../../../../../environments/environment';
+import { isObject } from 'class-validator';
+import { MENSAJES } from '../../../../core/constants.config';
+import { isPassword } from '../../../../core/services/functions.service';
+import { CustomValidators } from '../../../../core/validators.config';
 
 @Component({
   selector: 'form-control',
@@ -29,333 +19,217 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./form-control.component.scss'],
 })
 export class FormControlComponent implements OnChanges {
-  @ViewChild('input') inputRef!: ElementRef;
   @Input() public form!: FormGroup;
+  @Input() public name!: string;
   @Input() public type:
-    | 'text'
-    | 'file'
     | 'textarea'
-    | 'dataList'
     | 'date'
-    | 'datetime'
     | 'select'
+    | 'text'
     | 'number'
     | 'email'
+    | 'autocomplete'
     | 'password' = 'text';
-  @Input() public name!: string;
-  @Input() public min!: Date | string;
-  @Input() public max!: Date;
   @Input() public label!: string;
-  @Input() public tooltip!: string;
   @Input() public placeholder!: string;
-  @Input() public isSubmited: boolean = false;
+  @Input() public error: string = MENSAJES.CAMPO_REQUERIDO;
   @Input() public maxlength: number | string = 30;
-  @Input() public maxFileBytes: number = environment.MAX_UPLOAD_BYTES;
-  @Input() public regex!: RegExp;
-  @Input() public dataSelect: FormControlComponentDataSelect[] = [];
-  @Input() public isPhrasecase: boolean = true;
-  @Input() public multiple: boolean = false;
-  @Input() public disabled: boolean = false;
-  @Input() public onlyAccept: string = '';
-  @Input() public validateRegex: boolean = true;
   @Input() public hiddenLabel: boolean = false;
-  @Input() public hiddenError: boolean = false;
-  @Input() public hiddenDefault: boolean = false;
-  @Input() public formClass: string = '';
-  @Output() public changeValue = new EventEmitter<any>();
+  @Input() public isSubmitted: boolean = false;
+  @Input() public dataSelect: DataSelect[] = [];
+  @Input() public minDate!: Date;
+  @Input() public maxDate!: Date;
+  @Input() public minNumber!: number;
+  @Input() public maxNumber!: number;
+  @Input() public rows: number=4;
+  @Input() public prefixIcon!: string;
+  @Input() public multiple: boolean = false;
 
   @Output() public blur = new EventEmitter<any>();
   @Output() public input = new EventEmitter<any>();
   @Output() public change = new EventEmitter<any>();
   @Output() public enter = new EventEmitter<any>();
-  @Output() public validate = new EventEmitter<any>();
-  public isDirty: boolean = false;
-  public isBadFile: boolean = false;
-  public validator = Validators.required;
-  public componentType: 'dataList' | 'select' | 'input' | 'textarea' = 'input';
-  public focusOut: boolean = false;
-  private ignoredValidationTypes = ['date', 'datetime', 'text'];
-  constructor(private cdRef: ChangeDetectorRef) {}
 
+  public hidePassword: boolean = true;
+  private errorMessage: string = '';
+  public autoCompleteOptions!: DataSelect[];
+  public autocompleteFirstValue = '';
+
+  constructor(private cdRef: ChangeDetectorRef) {}
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['label'] || changes['placeholder']) this.setLabel();
     if (
-      changes['isSubmited'] &&
-      changes['isSubmited'].previousValue &&
-      !changes['isSubmited'].currentValue
+      changes['dataSelect'] &&
+      this.dataSelect &&
+      this.dataSelect.length > 0 &&
+      this.isAutocomplete
     ) {
-      this.isDirty = false;
+      this.autoCompleteValidators();
     }
-    if (changes['form'] || changes['name']) {
-      if (!this.form) {
-        throw new Error('Debe proveer un formulario en el campo [form]');
-      }
-      if (!this.name) {
-        throw new Error('Debe proveer un nombre de control en el campo [name]');
-      }
-      if (!this.control) {
-        throw new Error('El nombre de control es inválido');
-      }
+    if (changes['isSubmitted'] && this.isSubmitted && this.control) {
+      this.control.markAsTouched();
     }
-    this.setComponentType();
-    this.setTooltip();
-    this.setLabel();
-    this.form.get(this.name)?.setValue(this.value);
+    this.setErrors();
     this.cdRef.detectChanges();
   }
 
-  setLabel() {
-    if (this.label && !this.placeholder) {
-      this.placeholder = this.label;
-    } else if (!this.label && this.placeholder) {
-      this.label = this.placeholder;
-    } else if (!this.label && !this.placeholder) {
-      this.label = this.name;
-      this.placeholder = this.name;
+  setErrors() {
+    if (this.error) {
+      this.errorMessage = this.error;
     }
-  }
-  private get value() {
-    return this.control?.value;
+    this.control.valueChanges.subscribe((val) => {
+      if (this.control!.errors) {
+        if (this.control!.errors['required']) {
+          this.error = MENSAJES.CAMPO_REQUERIDO;
+        } else if (this.control!.errors['invalidAutocomplete']) {
+          this.error = MENSAJES.CAMPO_INVALIDO;
+        } else {
+          this.error = this.errorMessage || MENSAJES.CAMPO_REQUERIDO;
+        }
+      }
+    });
   }
 
-  private get control() {
-    return this.form.get(this.name);
+  setLabel() {
+    this.label = this.label || this.placeholder || this.name;
+    this.placeholder = this.placeholder || this.label;
   }
-  get isInput(): boolean {
-    return this.componentType == 'input' && !this.type.includes('date');
+
+  autoCompleteValidators() {
+    setTimeout(() => {
+      this.control.addValidators(
+        CustomValidators.autocomplete(this.dataSelect)
+      );
+    }, 1000);
   }
-  get isDatalist(): boolean {
-    return this.componentType == 'dataList';
-  }
+
   get isSelect(): boolean {
-    return this.componentType == 'select';
+    return this.type == 'select';
   }
+
+  get isPassword(): boolean {
+    return this.type == 'password';
+  }
+
+  get isInput(): boolean {
+    return ['text', 'number', 'email', 'password'].includes(this.type);
+  }
+
   get isTextarea(): boolean {
-    return this.componentType == 'textarea';
+    return ['textarea'].includes(this.type);
   }
+
+  get isAutocomplete(): boolean {
+    return this.type == 'autocomplete';
+  }
+
   get isDate(): boolean {
     return this.type == 'date';
   }
-  get accept() {
-    return this.isFile ? this.onlyAccept || TYPE_OF_FILES.ALL : undefined;
-  }
-  get isFile() {
-    return this.type == 'file';
-  }
-  get maxLength() {
-    return this.isInput || this.isTextarea ? this.maxlength : undefined;
+
+  get autoCompleteSelectDescription() {
+    const find = isObject(this.value)
+      ? undefined
+      : this.dataSelect.find((item) => item.value == this.value);
+    return find ? find.description : '';
   }
 
-  /**
-   * @description Selecciona el tipo de componente
-   */
-  setComponentType() {
-    if (this.type == 'select') {
-      this.componentType = 'select';
-      if (!this.dataSelect || !this.dataSelect.length)
-        throw new Error(
-          `La lista de selección [name]="${this.name}" está vacía.`
-        );
-    } else if (this.type == 'dataList') {
-      this.componentType = 'dataList';
-    } else if (this.type == 'textarea') {
-      this.componentType = 'textarea';
-    } else if (this.type.includes('date')) {
-      if (!this.min) {
-        this.min = new Date();
-      }
-      if (typeof this.min == 'string') {
-        this.min = transformStringToDate(this.min) || new Date();
-      }
-      // Transform string date to date
-    } else {
-      this.componentType = 'input';
-    }
+  get control() {
+    return this.form && this.name && this.form.controls[this.name]
+      ? this.form.controls[this.name]
+      : new FormControl('');
   }
 
-  /**
-   * type of input
-   */
-  get inputType() {
-    const isNumber = this.type == 'number';
-    return isNumber ? 'number' : this.type;
+  get value() {
+    return this.control ? this.control.value : undefined;
   }
 
-  /**
-   * @description define el mensaje que se va a mostrar en el tooltip
-   */
-  setTooltip() {
-    if (this.validateRegex && !this.tooltip) {
-      if (this.regex) {
-        this.tooltip = 'Error: debe poner un tooltip explicando su REGEX.';
-      } else {
-        switch (this.type) {
-          case 'password':
-            this.tooltip =
-              'La contraseña debe tener por lo menos 6 dígitos, 3 de los cuales deben ser de los siguientes tipos de caractér: minúsculas, mayúsculas, números, especiales.';
-            break;
-          case 'number':
-            this.tooltip = 'Este campo solo acepta números.';
-            break;
-          case 'email':
-            this.tooltip = 'Este no es un formato de email válido.';
-            break;
-          case 'date':
-          case 'datetime':
-            this.tooltip = `La fecha seleccionada debe estar en el rango habilitado.`;
-            break;
-          case 'file':
-            this.tooltip = `Los tipos de archivo permitidos son ${
-              this.accept
-            } y no deben superar los ${this.maxFileBytes / 1000000}MB`;
-            break;
-        }
-      }
-    }
+  get isRequired() {
+    return this.control.hasValidator(Validators.required);
   }
 
-  /**
-   * Valida si el campo es requerido
-   * @returns
-   */
-  isRequiredField() {
-    this.setTooltip();
-    if (this.hiddenError) return false;
-    const control = this.form.get(this.isFile ? 'file' : this.name);
-    const value = control?.value;
-    const errors = !isEmpty(control?.errors);
-    const invalid = this.isFile
-      ? !this.isValid()
-      : !this.isValid() || !control?.valid;
-    if (value) this.isDirty = true;
-    const empty = isEmpty(value);
-
-    if (this.isSubmited || (this.isDirty && this.focusOut)) {
-      return (invalid && empty) || errors;
-    }
-    return false;
+  get isDisabled() {
+    return this.control.disabled;
   }
-
   /**
    * @description define su validez segun el tipo de campo de texto seleccionado
    */
-  isValid() {
-    const control = this.form.get(this.isFile ? 'file' : this.name);
-    const value = control?.value;
-    const empty = isEmpty(value);
-    if (this.isDate) {
-      return this.isDateGreaterThanMin;
-    } else if (this.isFile) {
-      return !this.isBadFile;
-    } else if (this.regex && this.validateRegex) {
-      return matchString(value, this.regex);
-    } else if (
-      this.validateRegex &&
-      !this.ignoredValidationTypes.includes(this.type)
-    ) {
-      return (
-        (this.type == 'email' && isEmail(value)) ||
-        (this.type == 'password' && isPassword(value)) ||
-        (this.type == 'number' && (isNumber(value) || isNumberString(value)))
-      );
-    }
-    return true;
-  }
-
-  get isDateGreaterThanMin() {
-    if (this.type.includes('date') && this.value) {
-      const dateValue =
-        typeof this.value == 'string'
-          ? transformStringToDate(this.value)
-          : this.value;
-      const min = this.min as Date;
-      const result = dateValue > min;
-      return result;
-    }
-    return false;
-  }
-
-  replaceCharacters(event: InputEvent) {
-    if (
-      this.regex &&
-      this.validateRegex &&
-      !matchString(event.data, this.regex)
-    ) {
-      this.form
-        .get(this.name)
-        ?.setValue(this.form.get(this.name)?.value.replaceAll(event.data, ''));
-    } else if (this.type == 'number') {
-      if (!isNumber(+event.data!) || !isNumberString(event.data)) {
-        this.form
-          .get(this.name)
-          ?.setValue(
-            this.form.get(this.name)?.value.replaceAll(event.data, '')
-          );
-      }
-    }
-  }
-
-  emitValue() {
-    this.form.get(this.name)?.setValue(this.value);
-    this.changeValue.emit(this.form.get(this.name)?.value);
+  get isValid() {
+    return isPassword(this.value);
   }
 
   onBlur(event: any) {
-    this.onValidate();
-    this.focusOut = !this.isValid();
     this.blur.emit(event);
   }
 
   onInput(event: any) {
-    this.onValidate();
-    this.replaceCharacters(event);
     this.input.emit(event);
   }
 
   onChange(event: any) {
-    this.onFileChange(event);
-    this.onValidate();
+    this.change.emit(event);
+  }
+
+  onChagneAutocomplete(event: any) {
     this.change.emit(event);
   }
 
   onEnter(event: any) {
-    this.onValidate();
     this.enter.emit(event);
   }
 
-  onValidate() {
-    this.setTooltip();
-    this.validate.emit({
-      required: this.isRequiredField(),
-      tooltip: this.tooltip,
-    });
+  public displayFn(item: DataSelect): string {
+    return item?.description;
   }
 
-  onFileChange(event: any) {
-    this.isBadFile = false;
-    if (this.isFile && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      if (file) this.isDirty = true;
-
-      if (
-        isValidFileSize(file, this.maxFileBytes) &&
-        isValidFileExtension(file, TYPE_OF_FILES.ALL)
-      ) {
-        this.isBadFile = false;
-        this.form.patchValue({
-          file,
-        });
-      } else {
-        this.isBadFile = true;
-        this.form.patchValue({
-          [this.name]: null,
-          file: null,
-        });
-      }
+  public filterAutocomplete(texto: string | number | any, event: any) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
     }
+    const newTexto = String(texto).toLowerCase().trim();
+
+    this.autoCompleteOptions = this.dataSelect.filter((data) =>
+      data.description.toLowerCase().includes(newTexto)
+    );
+    if (event) {
+      this.setAutocompleteValue();
+      this.onChange(event);
+    }
+  }
+
+  setAutocompleteValue() {
+    if (
+      this.autoCompleteOptions.length == 1 &&
+      this.autoCompleteOptions[0].description == this.autocompleteFirstValue
+    ) {
+      // Hay una espera entre que el cambio se aplica y que el cambio se nota
+      setTimeout(() => {
+        this.control.setValue(this.autoCompleteOptions[0]);
+      }, 200);
+    }
+  }
+
+  get selectedDescriptionSelect() {
+    const find = this.dataSelect.find((val) => val.value == this.value);
+    return find ? find.description : '';
   }
 }
 
-export interface FormControlComponentDataSelect {
+export interface DataSelect {
+  /** el valor que será seleccionado */
   value: any;
+  /** el texto que tendrá la opción */
   description: string;
+
+  /**
+   * clase del circulo rojo de estado
+   */
+  statusClass?: string;
+
+  /**
+   * Texto que se mostrará al lado derecho del select
+   */
+  details?: string;
+  disabled?: boolean;
 }

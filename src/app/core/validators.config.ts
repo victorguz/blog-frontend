@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isNotEmpty, isNumber, isObject, isString } from 'class-validator';
-import { DataSelect } from '../modules/shared/components/form-text/form-text.component';
+import { DataSelect } from '../modules/shared/components/form-control/form-control.component';
 
 export class CustomValidators {
   static patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {

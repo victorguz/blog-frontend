@@ -1,9 +1,109 @@
 mat-dialog-container {
   border-radius: var(--default-radius) !important;
   padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.cdk-global-scrollblock {
+  overflow: hidden;
+}
+
+.mat-icon-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mat-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mat-option-text,
+.mat-option-text mat-checkbox,
+.mat-option-text mat-checkbox .mat-checkbox-layout,
+.mat-option-text mat-checkbox .mat-checkbox-layout .mat-checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.mat-step-header .mat-icon {
+  font-weight: 900;
+}
+.mat-step-header .mat-step-icon {
+  background-color: #b3bec8 !important;
+  color: #fff !important;
+}
+.mat-step-header .mat-step-icon-selected {
+  background-color: var(--bg-primary) !important;
+  color: #fff !important;
+}
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #d0d7de !important;
+  color: var(--bg-primary) !important;
+}
+.mat-step-header {
+  background-color: transparent !important;
+}
+
+.mat-step-header .mat-step-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #5e7184 !important;
+}
+
+.mat-step-header .mat-step-label-selected {
+  color: var(--bg-primary) !important;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.mat-horizontal-content-container {
+  padding: 3rem !important;
+  min-height: 500px !important;
+  border-radius: 8px;
+  border: 2px solid #ccc1ff;
+  margin-bottom: 3rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem !important;
+  }
+}
+
+.mat-stepper-horizontal {
+  background-color: transparent !important;
+}
+
+.untouchable-steps .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+.flex-stepper {
+  .mat-horizontal-stepper-wrapper {
+    display: flex;
+    align-items: center;
+
+    .mat-horizontal-stepper-header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+    }
+
+    .mat-horizontal-content-container {
+      width: 100%;
+    }
+  }
 }
 
 mat-icon {
   min-width: 1em !important;
   min-height: 1em !important;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: var(--mat-form-field-active-color)!important;
 }
