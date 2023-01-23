@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BlogContentComponent } from './blog-content.component';
+import { PostIndexComponent } from './post-index.component';
 
-describe('BlogContentComponent', () => {
-  let component: BlogContentComponent;
-  let fixture: ComponentFixture<BlogContentComponent>;
+describe('PostIndexComponent', () => {
+  let component: PostIndexComponent;
+  let fixture: ComponentFixture<PostIndexComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BlogContentComponent ]
+      declarations: [ PostIndexComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BlogContentComponent);
+    fixture = TestBed.createComponent(PostIndexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

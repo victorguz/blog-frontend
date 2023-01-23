@@ -1,6 +1,10 @@
-<div class="field">
+<!-- <div class="field {{ class }}">
   <div class="content">
     <label>Contenido</label>
-    <div id="editor-js" class="bg-light" placeholder="content"></div>
+    <div id="editor-js" class="bg-light mx-3"></div>
   </div>
 </div>
+<mat-error class="mx-3" *ngIf="isRequired && !value.blocks"
+  >Este campo es requerido</mat-error
+> -->
+<div id="editor-js" class="{{ class }}"></div>

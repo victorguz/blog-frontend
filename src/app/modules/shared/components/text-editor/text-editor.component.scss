@@ -2,8 +2,23 @@
   border: 2px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   margin: 0.25em 0;
-  padding: 0.3rem 1.5rem;
+  padding: 0.3rem 0.7rem;
   pointer-events: none;
+
+  .content {
+    pointer-events: auto;
+
+    label {
+      padding: 3px;
+      width: fit-content;
+      background-color: white;
+      font-family: "Roboto";
+      font-size: 0.75rem;
+      margin-top: -17px;
+
+      opacity: 0;
+    }
+  }
 
   &:hover {
     border-color: black;
@@ -12,15 +27,10 @@
   &:focus,
   &:active {
     border-color: var(--mat-form-field-active-color);
-  }
-
-  .content {
-    pointer-events: auto;
-
-    label {
-      background-color: white;
-      font-family: "Roboto";
-      font-size: 0.75rem;
+    .content {
+      label {
+        opacity: 1;
+      }
     }
   }
 }

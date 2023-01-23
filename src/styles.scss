@@ -15,11 +15,16 @@ body {
   height: 100%;
 }
 body {
+  background: url("/assets/images/svg/mask.svg") no-repeat top center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
   margin: 0;
   font-family: Poppins, "Helvetica Neue", sans-serif;
   max-width: 100vw;
-  max-height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 
   a {
     color: $primary-active;
@@ -39,9 +44,12 @@ body {
   }
 
   p,
-  p * {
+  p *  {
     font-size: 20px;
-    color: $dark;
+
+    &:not(a){
+      color: $dark;
+    }
     @media screen and (max-width: 768px) {
       font-size: 16px;
     }

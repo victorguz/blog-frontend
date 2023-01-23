@@ -18,6 +18,10 @@ mat-dialog-container {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+    min-width: 1em !important;
+  min-height: 1em !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .mat-option-text,
@@ -99,11 +103,13 @@ mat-dialog-container {
   }
 }
 
-mat-icon {
-  min-width: 1em !important;
-  min-height: 1em !important;
-}
 
 .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
     color: var(--mat-form-field-active-color)!important;
+}
+
+.mat-menu-item{
+display: flex !important;
+align-items: center !important;
+gap: 1rem;
 }

@@ -1,0 +1,37 @@
+@import "/src/assets/scss/variables";
+
+.index {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .lista {
+    position: fixed;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    gap: 0.7rem;
+
+    @media screen and (max-width: 992px) {
+      position: inherit;
+      width: 100%;
+    }
+
+    a {
+      display: flex;
+      width: 100%;
+      transition: all ease-in 0.2s;
+      padding: 0.3rem 1rem;
+      margin-left: 1rem;
+      background-color: rgba($color: $primary, $alpha: 0.2);
+      border-radius: 8px;
+      &.active {
+        background-color: rgba($color: $primary, $alpha: 1);
+      }
+    }
+  }
+}

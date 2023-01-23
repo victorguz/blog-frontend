@@ -39,6 +39,7 @@ import { TextEditorComponent } from './components/text-editor/text-editor.compon
     FooterComponent,
     CargarArchivoComponent,
     TextEditorComponent,
+
   ],
   imports: [
     CommonModule,

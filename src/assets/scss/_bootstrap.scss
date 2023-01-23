@@ -68,6 +68,15 @@
   font-weight: 500;
 }
 
-.text-primary {
+.text-primary,
+.link-primary {
   color: var(--bg-primary-active) !important;
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--bg-primary-active) !important;
+  }
+}
+[class^="link-"] {
+  cursor: pointer;
 }

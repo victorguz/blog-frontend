@@ -40,23 +40,20 @@ hr {
 
 .container-fluid {
   &.background {
-    background: url("/assets/images/svg/mask.svg") no-repeat top center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    max-height: 100vh;
+    justify-content: space-between;
     height: 100%;
-    overflow-y: auto;
-
     .content {
       display: flex;
       flex-direction: column;
-      height: 100%;
     }
   }
+}
+
+.unselectable {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }

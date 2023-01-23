@@ -5,10 +5,11 @@ import { BlogRoutingModule } from './blog-routing.module';
 import { BlogHomeComponent } from './pages/blog-home/blog-home.component';
 import { BlogCategoriesComponent } from './components/blog-categories/blog-categories.component';
 import { BlogPostOverviewComponent } from './components/blog-post-overview/blog-post-overview.component';
-import { BlogPostViewComponent } from './pages/post-view/post-view.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { BlogPostViewComponent } from './pages/post-view/post-view.component';
 import { BlogAutorComponent } from './components/blog-autor/blog-autor.component';
-import { BlogContentComponent } from './components/blog-content/blog-content.component';
+import { PostIndexComponent } from './components/post-index/post-index.component';
+import { PostPopularComponent } from './components/post-popular/post-popular.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { BlogContentComponent } from './components/blog-content/blog-content.com
     BlogPostOverviewComponent,
     BlogPostViewComponent,
     BlogAutorComponent,
-    BlogContentComponent,
+    PostIndexComponent,
+    PostPopularComponent,
   ],
   imports: [CommonModule, BlogRoutingModule, SharedModule],
 })

@@ -10,7 +10,6 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { isObject } from 'class-validator';
 import { MENSAJES } from '../../../../core/constants.config';
-import { isPassword } from '../../../../core/services/functions.service';
 import { CustomValidators } from '../../../../core/validators.config';
 
 @Component({
@@ -150,12 +149,6 @@ export class FormControlComponent implements OnChanges {
 
   get isDisabled() {
     return this.control.disabled;
-  }
-  /**
-   * @description define su validez segun el tipo de campo de texto seleccionado
-   */
-  get isValid() {
-    return isPassword(this.value);
   }
 
   onBlur(event: any) {

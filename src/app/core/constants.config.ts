@@ -63,16 +63,22 @@ export enum CodigosRespuesa {
 }
 
 export const REGEX = {
-  numeros: /\D/g,
-  alfanumerico: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9 \-\_]/g,
-  letras: /[a-zA-ZÀ-ÿ\u00f1\u00d1 ]/g,
-  nit: /[0-9\-]/g,
-  tipo: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9\-\_]/g,
-  nombreParametro: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]/g,
-  correo:
-    /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-  password:
-    /^((?=.*[\d])(?=.*[a-z])(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[a-z])(?=.*[^\w\d\s])).{6,}$/,
+  match: {
+    numeros: /\D/g,
+    alfanumerico: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9 \-\_]/g,
+    letras: /[a-zA-ZÀ-ÿ\u00f1\u00d1 ]/g,
+    nit: /[0-9\-]/g,
+    tipo: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9\-\_]/g,
+    nombreParametro: /[a-zA-ZÀ-ÿ\u00f1\u00d10-9 ]/g,
+    correo:
+      /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+    password:
+      /^((?=.*[\d])(?=.*[a-z])(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[A-Z])(?=.*[^\w\d\s])|(?=.*[\d])(?=.*[a-z])(?=.*[^\w\d\s])).{6,}$/,
+  },
+  replace: {
+    friendlyString: /[^A-Za-z0-9-]/gi,
+    repetidos: /(.)\1+/gim,
+  },
 };
 
 export const LOGIN_ROUTE = '/public/login';

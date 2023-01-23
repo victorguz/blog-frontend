@@ -1,61 +1,54 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-8">
-      <div class="row">
-        <form-control
-          class="col-lg-12"
-          type="text"
-          [form]="form"
-          name="name"
-          label="Título"
-        ></form-control>
+      <text-editor [form]="form" name="content" label="Contenido">
+      </text-editor>
+    </div>
 
-        <text-editor>
-
-        </text-editor>
-        <form-control
-          class="col-lg-12"
-          type="textarea"
-          [form]="form"
-          name="content"
-          label="Contenido"
-        ></form-control>
-
-       <cargar-archivo class="mt-3 mb-3">
-       </cargar-archivo>
-
-
-        <form-control
-          class="col-lg-12"
-          type="textarea"
-          [form]="form"
-          name="description"
-          label="Cescripción"
-        ></form-control>
+    <div class="col-lg-4">
+      <cargar-archivo class="mt-1 mb-3" [type]="fileType"> </cargar-archivo>
+      <form-control
+        type="text"
+        [form]="form"
+        name="name"
+        label="Título"
+      ></form-control>
+      <form-control
+        type="select"
+        [multiple]="true"
+        [form]="form"
+        name="tags"
+        label="Etiquetas"
+      ></form-control>
+      <form-control
+        type="select"
+        [form]="form"
+        name="category"
+        label="Categoría"
+      ></form-control>
+      <form-control
+        type="textarea"
+        [form]="form"
+        name="description"
+        label="Descripción"
+      ></form-control>
+      <div
+        class="d-flex align-items-center justify-content-end gap-3 w-100 mt-3"
+      >
+        <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item routerLink="/private/post/new">
+            <mat-icon>visibility</mat-icon> Dejar de publicar
+          </button>
+          <button mat-menu-item routerLink="/private/post/new">
+            <mat-icon>schedule</mat-icon> Programar
+          </button>
+        </mat-menu>
+        <button type="submit" class="btn btn-secondary" (click)="modalPrevisualizar()">Visualizar</button>
+        <button type="submit" class="btn btn-primary">Publicar</button>
       </div>
     </div>
-    <div class="col-lg-4">
- <form-control
-          type="text"
-          [form]="form"
-          name="tags"
-          label="tags"
-        ></form-control>
-        <form-control
-          type="text"
-          [form]="form"
-          name="category"
-          label="category"
-        ></form-control>
-          <form-control
-          class="col-lg-12"
-          type="text"
-          [form]="form"
-          name="status"
-          label="status"
-        ></form-control>
-    </div>
   </div>
-
-  <button type="submit" class="btn btn-primary">Crear post</button>
 </div>

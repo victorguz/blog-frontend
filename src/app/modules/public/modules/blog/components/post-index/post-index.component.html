@@ -1,0 +1,20 @@
+<section class="index">
+  <div class="lista text-muted unselectable">
+    <h5>Contenido</h5>
+    <a
+      *ngFor="let item of filteredHeaders"
+      class="link-primary"
+      [routerLink]="['./']"
+      [fragment]="item.class"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{
+        matrixParams: 'exact',
+        queryParams: 'exact',
+        paths: 'exact',
+        fragment: 'exact'
+      }"
+    >
+      {{ item.text }}
+    </a>
+  </div>
+</section>

@@ -125,7 +125,7 @@ export function getErrorMessage(error: any, print: boolean = true): string {
 }
 export function matchString(
   data: string | null | undefined,
-  regex: RegExp = REGEX.alfanumerico
+  regex: RegExp = REGEX.match.alfanumerico
 ): boolean {
   return data && data.match(regex) ? true : false;
 }
@@ -162,16 +162,6 @@ export function hideLoadingSpinner(number: 1 | 2 = 1) {
   document
     .getElementById('aurora-spinner-container' + number)
     ?.setAttribute('hidden', 'true');
-}
-
-/**
- * Evalúa si una cadena es una contraseña válida. Esta contraseña debe tener
- * por lo menos 8 dígitos, 3 de los 4 siguientes tipos de caracter:
- * minúsculas, mayúsculas, números, especiales
- * @param value cadena a evaluar
- */
-export function isPassword(value: string): boolean {
-  return value.match(REGEX.password) != null;
 }
 
 export function sortArray(array: any[], key: string | undefined = undefined) {
@@ -476,7 +466,6 @@ export function transformStringToDate(date: string): Date | null {
   return newDate;
 }
 
-
 export function isValidFileSize(
   file: File,
   MAX_UPLOAD_BYTES: number = environment.MAX_UPLOAD_BYTES
@@ -495,4 +484,12 @@ export function isValidFileExtension(
 
   let ext = file.name.split('.').pop()!.toLowerCase();
   return extensions.includes(ext);
+}
+
+export function friendlyString(cad: string) {
+  return cad
+    .trim()
+    .replaceAll(' ', '-')
+    .replaceAll(REGEX.replace.repetidos, '')
+    .replaceAll(REGEX.replace.friendlyString, '');
 }

@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTabsModule,
     MatCheckboxModule,
     MatAutocompleteModule,
+    MatChipsModule,
   ],
   exports: [
     MatTableModule,
@@ -71,6 +73,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTabsModule,
     MatCheckboxModule,
     MatAutocompleteModule,
+    MatChipsModule,
   ],
   providers: [],
 })

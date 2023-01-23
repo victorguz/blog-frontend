@@ -11,8 +11,10 @@ import {
 } from '@angular/core';
 import { isEmpty } from 'class-validator';
 import { TYPE_OF_FILES } from '../../../../core/constants.config';
-import { isValidFileExtension, isValidFileSize } from '../../../../core/services/functions.service';
-
+import {
+  isValidFileExtension,
+  isValidFileSize,
+} from '../../../../core/services/functions.service';
 
 @Component({
   selector: 'cargar-archivo',
@@ -22,12 +24,13 @@ import { isValidFileExtension, isValidFileSize } from '../../../../core/services
 export class CargarArchivoComponent implements OnChanges, AfterViewInit {
   @ViewChild('inputFile') inputFileRef!: ElementRef;
   @Input()
-  apariencia: 'imagen' | 'archivos' = 'imagen';
+  type: TYPE_OF_FILES = TYPE_OF_FILES.ALL;
   @Input() maxFileBytes: number = 1e6;
   @Input() reset: number = 0;
   @Input() imageMaxWidth: number = 1080;
   @Input() imageMaxHeight: number = 720;
   @Input() disabled: boolean = false;
+  @Input() class = '';
   @Output() archivo = new EventEmitter<ArchivosInterface | null>();
   @Output() formData = new EventEmitter<FormData | null>();
 
@@ -38,14 +41,14 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
 
   errorMessage = '';
 
-  constructor() { }
+  constructor() {}
 
   ngAfterViewInit(): void {
     this.inputFile = this.inputFileRef.nativeElement;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['apariencia']) {
+    if (changes['type']) {
       this.tiposPermitidos = this.isImage
         ? TYPE_OF_FILES.IMAGEN
         : TYPE_OF_FILES.PDF;
@@ -56,7 +59,7 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
   }
 
   get isImage() {
-    return this.apariencia == 'imagen';
+    return this.type == TYPE_OF_FILES.IMAGEN;
   }
 
   /**
