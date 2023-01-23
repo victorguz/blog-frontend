@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
-  Router,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 import { HelpersService } from '../services/helpers.service';
+import { scrollToElement } from '../services/functions.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +17,29 @@ export class PageConfigurationGuard implements CanActivate {
   constructor(private helpers: HelpersService) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    snapshot: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    this.helpers.setTitleFromSnapshot(route);
+    this.helpers.setTitleFromSnapshot(snapshot);
 
+    if (snapshot.data['scrollToFragment'] && snapshot.fragment) {
+      console.log(snapshot.fragment);
+
+      const interval = setInterval(() => {
+        const querySelector = '.' + snapshot.fragment;
+        try {
+          scrollToElement(querySelector);
+          clearInterval(interval);
+        } catch (error) {}
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+      }, environment.REQUEST_TIMEOUT);
+    }
     return true;
   }
 }

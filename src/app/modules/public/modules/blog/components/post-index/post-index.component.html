@@ -1,6 +1,6 @@
 <section class="index">
+  <h5>Contenido</h5>
   <div class="lista text-muted unselectable">
-    <h5>Contenido</h5>
     <a
       *ngFor="let item of filteredHeaders"
       class="link-primary"
@@ -13,6 +13,7 @@
         paths: 'exact',
         fragment: 'exact'
       }"
+      (click)="scrollToElementVoid(item.class)"
     >
       {{ item.text }}
     </a>

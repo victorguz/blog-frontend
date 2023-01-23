@@ -8,6 +8,7 @@ import {
 import { OutputData } from '@editorjs/editorjs';
 import { isJSON } from 'class-validator';
 import { EditorJsConfig } from '../../../../../../core/editorjs.config';
+import { scrollToElement } from '../../../../../../core/services/functions.service';
 
 @Component({
   selector: 'app-post-index',
@@ -41,5 +42,9 @@ export class PostIndexComponent implements OnInit, OnChanges {
           };
         });
     }
+  }
+
+  scrollToElementVoid(element: string) {
+    scrollToElement('.' + element);
   }
 }

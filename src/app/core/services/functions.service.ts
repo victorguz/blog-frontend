@@ -493,3 +493,11 @@ export function friendlyString(cad: string) {
     .replaceAll(REGEX.replace.repetidos, '')
     .replaceAll(REGEX.replace.friendlyString, '');
 }
+
+export function scrollToElement(querySelector: string) {
+  document.querySelector(querySelector)!.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+    inline: 'center',
+  });
+}

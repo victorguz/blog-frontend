@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'post/:id',
     component: BlogPostViewComponent,
-    data: { title: 'Post' },
+    data: { title: 'Post', scrollToFragment: true },
     canActivate: [PageConfigurationGuard],
   },
   { path: '**', pathMatch: 'prefix', redirectTo: 'home' },
