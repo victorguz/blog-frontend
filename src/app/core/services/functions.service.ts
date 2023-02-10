@@ -486,18 +486,64 @@ export function isValidFileExtension(
   return extensions.includes(ext);
 }
 
-export function friendlyString(cad: string) {
+export function friendlyStringTag(cad: string) {
   return cad
+    .toLowerCase()
     .trim()
     .replaceAll(' ', '-')
     .replaceAll(REGEX.replace.repetidos, '')
     .replaceAll(REGEX.replace.friendlyString, '');
 }
 
+export function friendlyString(cad: any) {
+  cad = String(cad);
+  return cad.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+    switch (char) {
+      case '\0':
+        return '\\0';
+      case '\x08':
+        return '\\b';
+      case '\x09':
+        return '\\t';
+      case '\x1a':
+        return '\\z';
+      case '\n':
+        return '\\n';
+      case '\r':
+        return '\\r';
+      case '"':
+      case "'":
+      case '\\':
+      case '%':
+        return '\\' + char; // prepends a backslash to backslash, percent,
+      // and double/single quotes
+      default:
+        return char;
+    }
+  });
+}
+export function friendlyObject(obj: any) {
+  
+  const newObj = cloneObject(obj);
+  for (const key in newObj) {
+    if (Object.prototype.hasOwnProperty.call(newObj, key)) {
+      const element = newObj[key];
+      if (typeof newObj[key] == 'object') {
+        newObj[key] = friendlyObject(newObj[key]);
+      } else {
+        newObj[key] = friendlyString(newObj[key]);
+      }
+    }
+  }
+  return newObj;
+}
 export function scrollToElement(querySelector: string) {
   document.querySelector(querySelector)!.scrollIntoView({
     behavior: 'smooth',
     block: 'center',
     inline: 'center',
   });
+}
+export function cloneObject(object: any) {
+  return object ? JSON.parse(JSON.stringify(object)) : object;
 }

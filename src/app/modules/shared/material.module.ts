@@ -21,6 +21,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatCheckboxModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatCardModule,
   ],
   exports: [
     MatTableModule,
@@ -74,6 +76,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatCheckboxModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatCardModule,
   ],
   providers: [],
 })

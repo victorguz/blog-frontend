@@ -6,12 +6,12 @@
     </div>
 
     <div class="col-lg-4">
-      <cargar-archivo class="mt-1 mb-3" [type]="fileType"> </cargar-archivo>
       <form-control
         type="text"
         [form]="form"
         name="name"
         label="Título"
+        maxlength="100"
       ></form-control>
       <form-control
         type="select"
@@ -31,23 +31,50 @@
         [form]="form"
         name="description"
         label="Descripción"
+        maxlength="500"
       ></form-control>
+      <cargar-archivo class="mt-1 mb-3" [type]="fileType"> </cargar-archivo>
       <div
         class="d-flex align-items-center justify-content-end gap-3 w-100 mt-3"
       >
-        <button mat-icon-button type="button" [matMenuTriggerFor]="menu">
-          <mat-icon>arrow_drop_down</mat-icon>
+        <button
+          mat-icon-button
+          type="button"
+          matTooltip="Opciones"
+          [matMenuTriggerFor]="menu"
+        >
+          <mat-icon>list</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item routerLink="/private/post/new">
-            <mat-icon>visibility</mat-icon> Dejar de publicar
+          <button mat-menu-item (click)="cambiarBorrador()">
+            <mat-icon>{{ isDraft ? "edit_off" : "edit" }}</mat-icon>
+            {{ isDraft ? "Guardar como público" : "Guardar como borrador" }}
           </button>
-          <button mat-menu-item routerLink="/private/post/new">
-            <mat-icon>schedule</mat-icon> Programar
+          <button mat-menu-item (click)="modalDatePicker()">
+            <mat-icon>schedule</mat-icon>
+            {{ selectedDate ? "Cambiar programación" : "Programar" }}
           </button>
         </mat-menu>
-        <button type="submit" class="btn btn-secondary" (click)="modalPrevisualizar()">Visualizar</button>
-        <button type="submit" class="btn btn-primary">Publicar</button>
+        <button
+          type="button"
+          mat-icon-button
+          class="btn btn-secondary"
+          matTooltip="Previsualizar"
+          (click)="modalPrevisualizar()"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="guardarPost()"
+          [matTooltip]="
+            'Fecha de publicación: ' +
+            (selectedDate ? (selectedDate | date : 'short') : 'Inmediatamente')
+          "
+        >
+          {{ isDraft ? "Guardar" : selectedDate ? "Programar" : "Publicar" }}
+        </button>
       </div>
     </div>
   </div>

@@ -5,8 +5,7 @@ import List from '@editorjs/list';
 import SimpleImage from '@editorjs/simple-image';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
-import { friendlyString } from './services/functions.service';
-import { REGEX } from './constants.config';
+import { friendlyStringTag } from './services/functions.service';
 
 export class EditorJsConfig {
   public static readonly CUSTOM_PARSERS = {
@@ -67,6 +66,6 @@ export class EditorJsConfig {
   }
 
   public static friendlyHeaderName(text: string) {
-    return `header-${friendlyString(text)}`.toLowerCase();
+    return `header-${friendlyStringTag(text)}`.toLowerCase();
   }
 }

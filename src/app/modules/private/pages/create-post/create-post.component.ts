@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { TYPE_OF_FILES } from '../../../../core/constants.config';
+import {
+  LOGICAL_STATUS,
+  REGEX,
+  TYPE_OF_FILES,
+} from '../../../../core/constants.config';
+import { friendlyObject, friendlyString } from '../../../../core/services/functions.service';
 import { HelpersService } from '../../../../core/services/helpers.service';
 import { CreatePostForm } from '../../../../interfaces/post.interface';
+import { PostsService } from '../../../../services/posts.service';
 import { BlogPostViewComponent } from '../../../public/modules/blog/pages/post-view/post-view.component';
+import { DatePickerComponent } from '../../../shared/components/date-picker/date-picker.component';
 
 @Component({
   selector: 'app-create-post',
@@ -132,15 +139,20 @@ export class CreatePostComponent implements OnInit {
         },
         Validators.required,
       ],
-      tags: ['', Validators.required],
-      status: ['', Validators.required],
+      tags: [''],
+      status: [LOGICAL_STATUS.ENABLED, Validators.required],
       image: ['', Validators.required],
-      category: ['', Validators.required],
+      category: [''],
+      publication_date: ['' as any, Validators.required],
     });
 
   step: 1 | 2 = 1;
+  selectedDate: Date | null = null;
 
-  constructor(private helpers: HelpersService) {}
+  constructor(
+    private helpers: HelpersService,
+    private postsService: PostsService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -148,5 +160,62 @@ export class CreatePostComponent implements OnInit {
     this.helpers.notificaciones.modalComponent({
       component: BlogPostViewComponent,
     });
+  }
+
+  modalDatePicker() {
+    this.helpers.notificaciones
+      .modalDatePicker(
+        {
+          title: 'Seleccione una fecha',
+          message: 'Seleccione una hora',
+        },
+        true,
+        this.selectedDate!
+      )
+      .subscribe((resultDate) => {
+        if (resultDate) {
+          console.log(resultDate);
+          this.selectedDate = resultDate;
+        } else {
+          this.selectedDate = null;
+        }
+      });
+  }
+
+  guardarPost() {
+    this.form.patchValue({
+      publication_date: this.selectedDate || new Date(),
+    });
+    const { content, description, ...value } = this.form.getRawValue();
+    this.postsService
+      .create({
+        ...value,
+        description: friendlyString(description),
+        content: JSON.stringify(friendlyObject(content)),
+      })
+      .subscribe({
+        next: (result) => {
+          console.log(result);
+        },
+        error: (err) => {
+          this.helpers.notificaciones.notificarError(err?.message);
+        },
+      });
+  }
+
+  cambiarBorrador() {
+    if (this.isDraft) {
+      this.form.patchValue({
+        status: LOGICAL_STATUS.ENABLED,
+      });
+    } else {
+      this.form.patchValue({
+        status: LOGICAL_STATUS.DISABLED,
+      });
+    }
+  }
+
+  get isDraft() {
+    return this.form.getRawValue().status == LOGICAL_STATUS.DISABLED;
   }
 }

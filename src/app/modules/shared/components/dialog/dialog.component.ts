@@ -8,14 +8,18 @@ import { ModalOptions } from '../../../../core/interfaces/shared.interfaces';
   styleUrls: ['./dialog.component.scss'],
 })
 export class DialogComponent {
+  color = 'primary';
   constructor(
     private dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       options: ModalOptions;
       type: 'confirmation' | 'info';
+      color?: 'primary' | 'danger';
     }
-  ) {}
+  ) {
+    this.color = data.color ? data.color : this.color;
+  }
 
   onCancel(): void {
     this.dialogRef.close(false);

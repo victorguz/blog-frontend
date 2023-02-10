@@ -1,29 +1,30 @@
-<article
-  class="dialog d-flex flex-column align-items-center p-4 position-relative text-center"
->
+<section class="dialog">
   <button
+    mat-icon-button
     *ngIf="data.type == 'confirmation'"
-    class="btn btn-close"
+    class="dialog-close text-{{ color }}"
     (click)="onCancel()"
-  ></button>
-  <h3
-    class="fw-bolder text-primary w-100 text-center"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <h5
+    class="fw-bolder text-{{ color }} w-100 text-center"
     [innerHTML]="data.options.title"
-  ></h3>
+  ></h5>
   <div
-    class="body pt-1 mb-3 px-5 pe-5"
+    class="body pt-1 mb-3 px-5 pe-5 text-center"
     [innerHTML]="data.options.message"
   ></div>
-  <section class="footer d-flex align-items-center gap-3">
+  <section class="footer d-flex align-items-center gap-4">
     <button
       *ngIf="data.type == 'confirmation'"
-      class="btn btn-outline-primary"
+      class="btn btn-outline-{{ color }}"
       (click)="onCancel()"
     >
       {{ data.options.cancelText || "Cancelar" }}
     </button>
-    <button class="btn btn-secondary" (click)="onOk()" cdkFocusInitial>
+    <button class="btn btn-{{ color }}" (click)="onOk()" cdkFocusInitial>
       {{ data.options.okText || "Aceptar" }}
     </button>
   </section>
-</article>
+</section>

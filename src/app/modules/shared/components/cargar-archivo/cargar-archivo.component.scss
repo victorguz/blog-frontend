@@ -17,9 +17,15 @@
     overflow: hidden;
     cursor: pointer;
   }
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
 
   .texto-interno {
-    background: transparent;
+    background-color: transparent;
     border: 2px dashed rgba(0, 0, 0, 0.12);
     border-radius: 8px;
 
@@ -38,6 +44,7 @@
     text-align: center;
 
     pointer-events: none;
+    font-family: "Roboto";
 
     .with-file {
       display: flex;

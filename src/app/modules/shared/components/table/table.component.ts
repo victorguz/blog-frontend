@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -12,9 +13,11 @@ import {
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { isNotEmpty, isString } from 'class-validator';
 
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { toTitleCase } from '../../../../core/services/functions.service';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import {
+  cloneObject,
+  toTitleCase,
+} from '../../../../core/services/functions.service';
 
 @Component({
   selector: 'aurora-table',
@@ -22,27 +25,28 @@ import { toTitleCase } from '../../../../core/services/functions.service';
   styleUrls: ['./table.component.scss'],
 })
 export class AuroraTableComponent implements OnChanges, AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginator') paginator!: MatPaginator;
+  @ViewChild('tableContainer') tableContainer!: ElementRef;
+  @ViewChild('table') table!: MatTable<any>;
 
   @Output() clickRow = new EventEmitter<any[]>();
   @Output() clickRefresh = new EventEmitter<any>();
   @Output() changePageCustomPaginator = new EventEmitter<any>();
 
   @Input() multipleSelection: boolean = false;
-  @Input() pageSizeOptions: number[] = [5, 10, 20];
-  @Input() showTableOnlyOnSearch: boolean = false;
-  @Input() lengthCustomPaginator: number = 0;
-  @Input() CurrentPageCustomPaginator: number = 0;
-  @Input() sizePageCustomPaginator: number = 0;
+  @Input() pageSizeOptions: number[] = [10];
 
   @Input() columns: AuroraTableColumn[] = [];
+  @Input() actions: AuroraActionColumn[] = [];
   @Input() data: any[] = [];
   @Input() actionColumnName: string = 'Acciones';
-  @Input() actions: AuroraActionColumn[] = [];
   @Input() valueSearch: string = '';
+  @Input() filter: AuroraTableFilter[] = [];
   @Output() filteredData = new EventEmitter<any[]>();
-  @Input() actionsOrientation: 'start' | 'end' | 'center' = 'center';
   @Input() selectedItems: any[] = [];
+  @Input() users: boolean = false;
+  @Input() showPaginator: boolean = true;
+  @Input() columnMaxLength: number = 70;
 
   displayedColumns: string[] = this.columns.map((value) => {
     return value.name;
@@ -50,10 +54,11 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
 
   dataSource = new MatTableDataSource<Set<any>>();
   selected = new Set<any>();
-  showTable: boolean = true;
+  expandedItems: any[] = [];
+
+  isTableResponsive = false;
 
   constructor(
-    public router: Router,
     private paginatorIntl: MatPaginatorIntl,
     private cdRef: ChangeDetectorRef
   ) {
@@ -61,22 +66,45 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.setShowTable();
     if (changes['valueSearch']) {
       this.applyFilter();
     }
     if (changes['data'] || changes['columns'] || changes['actions']) {
-      this.setData();
       this.setColumns();
-      this.setActionsOnData();
+      this.setData();
+      this.dataSource.paginator = this.paginator;
     }
     if (changes['selectedItems']) {
       this.selected = new Set<any>(this.selectedItems);
+      this.clickRow.emit(Array.from(this.selected));
+    }
+
+    if (changes['columnMaxLength']) {
+      this.columnMaxLength =
+        this.columnMaxLength > 0 ? this.columnMaxLength : 70;
     }
     this.cdRef.detectChanges();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.setTableResponsive();
+    }, 1000);
+  }
+
+  setTableResponsive() {
+    this.isTableResponsive = this.isTableMaxSize;
+  }
+
+  setFilter() {
+    const data: any[] = JSON.parse(JSON.stringify(this.data));
+    const filter = this.filter.map((val) => {
+      return { [val.column]: val.value };
+    });
+    this.dataSource.data = data.filter((val) => {
+      // .
+    });
+  }
 
   setColumns() {
     //Si no viene el parametro de columnas por defecto, se llena desde el parámetro "data"
@@ -98,24 +126,29 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
     });
   }
 
-  setActionsOnData() {
-    if (
-      this.actions &&
-      Array.isArray(this.actions) &&
-      this.actions.length &&
-      this.data &&
-      Array.isArray(this.data) &&
-      this.data.length
-    ) {
-      this.data.forEach((element, idx) => {
-        this.data[idx]['actions'] = this.actions;
-      });
-    }
-  }
-
+  /**
+   * Configura los datos de la tabla para que se pueda realizar filtros con los datos transformados
+   */
   setData() {
+    const newData = cloneObject(this.data);
+    this.data.forEach((item, idx) => {
+      for (const columnName in item) {
+        const findColumn = this.columns.find(
+          (column) => column.name == columnName
+        );
+        if (
+          Object.prototype.hasOwnProperty.call(item, columnName) &&
+          findColumn?.render
+        ) {
+          newData[idx][findColumn.name + 'Render'] = this.render(
+            findColumn,
+            item
+          );
+        }
+      }
+    });
+
     this.dataSource = new MatTableDataSource<any>(this.data);
-    this.dataSource.paginator = this.paginator;
   }
 
   applyFilter() {
@@ -126,21 +159,10 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-    this.setShowTable();
     this.filteredData.emit(this.dataSource.filteredData);
   }
 
-  /**
-   * Para determinar si se verán los datos de la tabla
-   * @returns
-   */
-  setShowTable() {
-    if (this.showTableOnlyOnSearch) {
-      this.showTable = this.valueSearch ? true : false;
-    }
-  }
-
-  addRowToItems(row: any) {
+  selectItem(row: any) {
     if (this.multipleSelection) {
       if (this.selected.has(row)) {
         this.selected.delete(row);
@@ -158,18 +180,46 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
     this.clickRow.emit(Array.from(this.selected));
   }
 
-  render(item: AuroraTableColumn, row: any) {
+  expandItem(row: any, column: AuroraTableColumn) {
+    const find = this.findExpandedItem(row, column);
+    if (find) {
+      this.expandedItems = this.expandedItems.filter((val) => {
+        const nombreOFilaDiferentes =
+          val.columnListName != find.columnListName || val.row != find.row;
+        return nombreOFilaDiferentes;
+      });
+    } else {
+      this.expandedItems.push({
+        row: JSON.stringify(row),
+        columnListName: column.name,
+      });
+    }
+  }
+
+  findExpandedItem(row: any, column: AuroraTableColumn) {
+    const find = this.expandedItems.find(
+      (val) =>
+        val.columnListName == column.name && val.row == JSON.stringify(row)
+    );
+    return find;
+  }
+
+  hasExpandedItem(row: any, column: AuroraTableColumn) {
+    return this.findExpandedItem(row, column) ? true : false;
+  }
+
+  render(column: AuroraTableColumn, item: any) {
     let element: any = {};
     let result: any = '';
-    for (const column in row) {
-      if (Object.prototype.hasOwnProperty.call(row, column)) {
-        element[column] = row[column] ? row[column] : '';
+    for (const field in item) {
+      if (Object.prototype.hasOwnProperty.call(item, field)) {
+        element[field] = item[field] ? item[field] : '';
       }
     }
-    let value = element[item.name];
-    if (item.render) {
-      result = item.render(value, row);
-    } else if (isString(value) && isNaN(Number(value))) {
+    let value = element[column.name];
+    if (column.render) {
+      result = column.render(value, item);
+    } else if (isString(value) || isNaN(Number(value))) {
       result = value;
     } else if (!isNaN(Number(value))) {
       result = Number(value);
@@ -178,14 +228,32 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
       result = JSON.stringify(value);
     }
     result = result + ''; //Convertir en string
-    result = result.length > 40 ? result.substring(0, 40) + '...' : result;
+    result =
+      result.length > this.columnMaxLength
+        ? result.substring(0, this.columnMaxLength) + '...'
+        : result;
     return result ? result : '';
   }
 
   getIcon(item: any, icon?: string | ((row: any) => string)) {
     const isIcon = isNotEmpty(icon) && isString(icon);
-    const isFunction = isNotEmpty(icon) && typeof icon == 'function';
-    return isIcon ? icon : isFunction ? icon(item) : 'check';
+    const isFunction =
+      isNotEmpty(icon) && typeof icon == 'function' ? icon(item) : 'check';
+    return isIcon ? icon : isFunction;
+  }
+
+  getImagen(item: any, imagen?: string | ((row: any) => string)) {
+    const isImagen = isNotEmpty(imagen) && isString(imagen);
+    const isFunction =
+      isNotEmpty(imagen) && typeof imagen == 'function' ? imagen(item) : '';
+    return isImagen ? imagen : isFunction;
+  }
+
+  getText(item: any, text?: string | ((row: any) => string)) {
+    const isText = isNotEmpty(text) && isString(text);
+    const isFunction =
+      isNotEmpty(text) && typeof text == 'function' ? text(item) : '';
+    return isText ? text : isFunction;
   }
 
   isDisabledAction(action: AuroraActionColumn, row: any) {
@@ -195,11 +263,36 @@ export class AuroraTableComponent implements OnChanges, AfterViewInit {
       return action.disabled ? true : false;
     }
   }
-  changePage(pageChangeDirection: string) {
-    this.changePageCustomPaginator.emit({ cambio: pageChangeDirection });
+
+  getButtonClass(item: any, buttonClass?: string | ((row: any) => string)) {
+    const isClass = isNotEmpty(buttonClass) && isString(buttonClass);
+    const isFunction =
+      isNotEmpty(buttonClass) && typeof buttonClass == 'function'
+        ? buttonClass(item)
+        : 'btn-outline-secondary';
+    return isClass ? buttonClass : isFunction;
   }
-  pageNumber() {
-    return Math.ceil(this.lengthCustomPaginator / this.sizePageCustomPaginator);
+
+  get isTableMaxSize() {
+    const tableElement = this.table['_elementRef'].nativeElement;
+    const tableContainer: HTMLDivElement = this.tableContainer.nativeElement;
+
+    const elementWidth = tableElement.clientWidth;
+    const maxWidth = tableContainer.clientWidth;
+
+    return elementWidth > maxWidth;
+  }
+
+  hasLeftItems(column: AuroraTableColumn) {
+    return (
+      column.statusClass || column.hasFlag || column.hasCheck || column.itemList
+    );
+  }
+
+  hasCheck(column: AuroraTableColumn, item: any) {
+    return typeof column.hasCheck == 'function'
+      ? column.hasCheck(item[column.name], item)
+      : column.hasCheck;
   }
 }
 
@@ -214,20 +307,47 @@ export interface AuroraTableColumn {
   name: string;
   title?: string;
   render?: (value: any, row?: any) => string;
+  columnClass?: (value: any, row?: any) => string;
+  titleClass?: string;
   statusClass?: (value: any, row?: any) => string;
+  hasFlag?: (value: any, row?: any) => boolean;
+  hasCheck?: ((value?: any, row?: any) => boolean) | boolean;
+  itemList?: (row?: any) => AuroraTableColumnList[];
+  titleAlignment?: 'text-start' | 'text-end' | 'text-center';
+  contentAlignment?: 'text-start' | 'text-end' | 'text-center';
 }
 
+export interface AuroraTableColumnList {
+  icon: string;
+  iconClass?: string;
+  text: string;
+  textClass?: string;
+  action?: AuroraTableColumnListItemAction;
+  tooltip?: string;
+}
+
+export class AuroraTableColumnListItemAction {
+  icon?: string;
+  disabled?: boolean;
+  iconClass?: string;
+  accion!: (row: any) => any;
+}
 export class AuroraActionColumn {
-  imagen?: string;
+  imagen?: string | ((row: any) => string);
+  texto?: string | ((row: any) => string);
   icon?: string | ((row: any) => string);
   disabled?: boolean | ((row: any) => boolean);
   iconClass?:
     | 'material-icons-rounded'
     | 'material-icons-outline'
     | 'material-icons-sharp' = 'material-icons-outline';
+  buttonClass?: string | ((row: any) => string);
   iconColor?: string = '#138496';
-  tooltip?: string;
-  tooltipPosition?: 'left' | 'right' | 'above' | 'below' | 'before' | 'after' =
-    'above';
-  accion!: (row: any, router: Router) => any;
+  tooltipText?: string;
+  tooltipOrientation?: 'above' | 'below' | 'left' | 'right' = 'below';
+  accion!: (row: any) => any;
+}
+export interface AuroraTableFilter {
+  column: string;
+  value: string;
 }

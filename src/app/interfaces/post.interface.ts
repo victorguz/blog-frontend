@@ -1,5 +1,6 @@
-import { FormControl } from "@angular/forms";
-import { FindDto } from "../core/dtos/find.dto";
+import { FormControl } from '@angular/forms';
+import { LOGICAL_STATUS } from '../core/constants.config';
+import { FindDto } from '../core/dtos/find.dto';
 
 export interface UpdatePost {
   id?: number;
@@ -18,19 +19,21 @@ export interface CreatePost {
   status: string;
   image: string;
   category: string;
+  publication_date: Date;
 }
 
-export interface CreatePostForm  {
+export interface CreatePostForm {
   name: FormControl<string>;
   description: FormControl<string>;
   content: FormControl<string>;
   tags: FormControl<string>;
-  status: FormControl<string>;
+  status: FormControl<LOGICAL_STATUS>;
   image: FormControl<string>;
   category: FormControl<string>;
+  publication_date: FormControl<Date>;
 }
 
-export interface SelectPost extends Partial<FindDto>,Partial<Post> {}
+export interface SelectPost extends Partial<FindDto>, Partial<Post> {}
 
 export interface Post {
   id: number;

@@ -28,6 +28,7 @@ export class FormControlComponent implements OnChanges {
     | 'number'
     | 'email'
     | 'autocomplete'
+    | 'time'
     | 'password' = 'text';
   @Input() public label!: string;
   @Input() public placeholder!: string;
@@ -111,7 +112,7 @@ export class FormControlComponent implements OnChanges {
   }
 
   get isInput(): boolean {
-    return ['text', 'number', 'email', 'password'].includes(this.type);
+    return ['text', 'number', 'email', 'password',"time"].includes(this.type);
   }
 
   get isTextarea(): boolean {

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SpinnerMessageOptions } from '../../../../core/interfaces/shared.interfaces';
+import { SpinnerMessageOptions } from '../../../core/interfaces/shared.interfaces';
 
 @Component({
   selector: 'app-spinner',
@@ -8,6 +8,7 @@ import { SpinnerMessageOptions } from '../../../../core/interfaces/shared.interf
   styleUrls: ['./spinner.component.scss'],
 })
 export class SpinnerComponent {
+  
   constructor(
     private dialogRef: MatDialogRef<SpinnerComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -15,7 +16,12 @@ export class SpinnerComponent {
       options: SpinnerMessageOptions;
     }
   ) {
-    setTimeout(() => this.onCancel(), this.data.options.timeoutMillis || 5000);
+    setTimeout(
+      () => this.onCancel(),
+      this.data.options && this.data.options.timeoutMillis
+        ? this.data.options.timeoutMillis
+        : 5000
+    );
   }
 
   onCancel(): void {

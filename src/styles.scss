@@ -6,6 +6,7 @@
 @import "./assets/scss/material";
 @import "./assets/scss/loading-spinner";
 @import "./assets/scss/own-classes";
+@import "./assets/scss/dialogs";
 
 * {
   font-size: 16px;
@@ -29,6 +30,7 @@ body {
   a {
     color: $primary-active;
     text-decoration: none;
+    cursor: pointer;
   }
   small,
   small * {
