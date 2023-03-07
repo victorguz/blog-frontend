@@ -4,7 +4,7 @@
     [routerLink]="['/public/blog/post', item.id]"
     *ngFor="let item of posts"
   >
-    <img [src]="item.image" alt="img-preview" class="post-img mb-4" />
+    <img [src]="item.image.base64" alt="img-preview" class="post-img mb-4" />
     <div class="description">
       <h1 class="fw-bold">
         {{

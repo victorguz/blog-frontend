@@ -10,6 +10,7 @@ import { BlogPostViewComponent } from './pages/post-view/post-view.component';
 import { BlogAutorComponent } from './components/blog-autor/blog-autor.component';
 import { PostIndexComponent } from './components/post-index/post-index.component';
 import { PostPopularComponent } from './components/post-popular/post-popular.component';
+import { PostContentComponent } from './components/post-content/post-content.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PostPopularComponent } from './components/post-popular/post-popular.com
     BlogAutorComponent,
     PostIndexComponent,
     PostPopularComponent,
+    PostContentComponent,
   ],
   imports: [CommonModule, BlogRoutingModule, SharedModule],
 })

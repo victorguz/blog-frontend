@@ -9,8 +9,10 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { isEmpty } from 'class-validator';
 import { TYPE_OF_FILES } from '../../../../core/constants.config';
+import { ArchivosInterface } from '../../../../core/interfaces/shared.interfaces';
 import {
   isValidFileExtension,
   isValidFileSize,
@@ -31,8 +33,10 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
   @Input() imageMaxHeight: number = 720;
   @Input() disabled: boolean = false;
   @Input() class = '';
-  @Output() archivo = new EventEmitter<ArchivosInterface | null>();
-  @Output() formData = new EventEmitter<FormData | null>();
+  @Input() form!: FormGroup;
+  @Input() name!: string;
+
+  @Output() onLoadFile = new EventEmitter<ArchivosInterface | null>();
 
   inputFile!: HTMLInputElement;
   file!: ArchivosInterface | null;
@@ -40,8 +44,6 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
   tiposPermitidos: TYPE_OF_FILES = TYPE_OF_FILES.PDF;
 
   errorMessage = '';
-
-  constructor() {}
 
   ngAfterViewInit(): void {
     this.inputFile = this.inputFileRef.nativeElement;
@@ -58,6 +60,12 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
     }
   }
 
+  get control() {
+    return this.form && this.name && this.form.controls[this.name]
+      ? this.form.controls[this.name]
+      : new FormControl('');
+  }
+
   get isImage() {
     return this.type == TYPE_OF_FILES.IMAGEN;
   }
@@ -69,7 +77,6 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
   public capturarArchivo() {
     this.file = null;
     if (this.inputFile.files && this.inputFile.files.length > 0) {
-      const data = new FormData();
       const file = this.inputFile.files[0];
       this.isBadFile = false;
       if (
@@ -80,13 +87,13 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
         this.extraerBase64(file).then((archivo: any) => {
           this.file = {
             nombre: file.name,
-            base64: archivo.split('base64,').pop(), //ignorar mimetype y enviar solo base64
+            base64: archivo,
             file: file,
-            extensionArchivo: file.name.split('.').pop()?.toUpperCase() || '',
+            extensionArchivo: file.name.split('.').pop()?.toLowerCase() || '',
           };
-          data.append(this.file.nombre, file, this.file.nombre);
-          this.formData.emit(data);
-          this.archivo.emit(this.file);
+
+          this.control.setValue(this.file);
+          this.onLoadFile.emit(this.file);
         });
       } else {
         this.isBadFile = true;
@@ -146,14 +153,7 @@ export class CargarArchivoComponent implements OnChanges, AfterViewInit {
     this.errorMessage = '';
     this.inputFile.value = '';
     this.file = null;
-    this.formData.emit(null);
-    this.archivo.emit(null);
+    this.control.setValue('');
+    this.onLoadFile.emit(null);
   }
-}
-
-export interface ArchivosInterface {
-  nombre: string;
-  file: File;
-  base64: string;
-  extensionArchivo: string;
 }

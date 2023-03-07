@@ -1,35 +1,49 @@
-import {
-  Component,
-  OnInit,
-  OnChanges,
-  Input,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { OutputData } from '@editorjs/editorjs';
-import { isJSON } from 'class-validator';
+import { isNotEmptyObject } from 'class-validator';
 import { EditorJsConfig } from '../../../../../../core/editorjs.config';
 import { scrollToElement } from '../../../../../../core/services/functions.service';
+import { Post } from '../../../../../../interfaces/post.interface';
+import { PostsService } from '../../../../../../services/posts.service';
 
 @Component({
   selector: 'app-post-index',
   templateUrl: './post-index.component.html',
   styleUrls: ['./post-index.component.scss'],
 })
-export class PostIndexComponent implements OnInit, OnChanges {
-  @Input() public content!: string;
-  public filteredHeaders: any[] = [];
+export class PostIndexComponent  {
 
-  constructor() {}
-
-  ngOnInit(): void {}
-  ngOnChanges(changes: SimpleChanges): void {
-    this.getFilteredHeaders();
+  public post!: Post;
+  private id!: number;
+  constructor(
+    private postsService: PostsService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params && params['id']) {
+        this.id = params['id'];
+        this.findPostById();
+      }
+    });
   }
 
+  findPostById() {
+    this.postsService.findAll({ id: this.id }).subscribe({
+      next: (result) => {
+        if (result.success && result.data && result.data[0]) {
+          this.post = result.data[0];
+          this.getFilteredHeaders();
+        }
+      },
+    });
+  }
+  public filteredHeaders: any[] = [];
+
+
   getFilteredHeaders() {
-    if (this.content && isJSON(this.content)) {
-      const parsedContent: OutputData = JSON.parse(this.content);
-      this.filteredHeaders = parsedContent.blocks
+    if (this.post.content && isNotEmptyObject(this.post.content)) {
+      this.filteredHeaders = this.post.content.blocks
         .filter((val) => val.type == 'header')
         .map((val) => {
           const data: {

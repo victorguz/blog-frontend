@@ -14,7 +14,6 @@ import { NotificacionesService } from '../../core/services/notificaciones.servic
 import { PhrasecasePipe } from '../../core/pipes/phrasecase.pipe';
 import { RouterModule } from '@angular/router';
 import { SanitizePipe } from '../../core/pipes/sanitize.pipe';
-import { SecondsToHourPipe } from '../../core/pipes/seconds-to-hour.pipe';
 import { MaterialModule } from './material.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -27,7 +26,6 @@ import { ModalImagenComponent } from './components/modal-imagen/modal-imagen.com
 @NgModule({
   declarations: [
     // Pipes
-    SecondsToHourPipe,
     PhrasecasePipe,
     SanitizePipe,
     // Components
@@ -57,7 +55,6 @@ import { ModalImagenComponent } from './components/modal-imagen/modal-imagen.com
     ReactiveFormsModule,
     HttpClientModule,
     // Pipes
-    SecondsToHourPipe,
     PhrasecasePipe,
     SanitizePipe,
     // Components
@@ -79,7 +76,6 @@ import { ModalImagenComponent } from './components/modal-imagen/modal-imagen.com
     AuthService,
     IndexedDBService,
     //pipes
-    SecondsToHourPipe,
     PhrasecasePipe,
     SanitizePipe,
     AsyncPipe,

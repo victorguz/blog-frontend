@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  API: 'http://localhost:3000',
+  API: 'http://localhost:3000/api',
   LOGIN: 'login',
   REQUEST_TIMEOUT: 15000,
   MAX_UPLOAD_BYTES: 100000000,

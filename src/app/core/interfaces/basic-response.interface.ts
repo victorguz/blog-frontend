@@ -1,15 +1,12 @@
-import { CodigosRespuesa } from '../constants.config';
-
 export class BasicResponse<T> {
-  success: boolean;
+  success: boolean = false;
   message: string;
   status: number;
-  data: T;
-  error?: any;
-
+  data?: T;
+  error?: { error: any; message: string };
   constructor(
-    success: boolean = false,
-    message: string = '',
+    success: boolean,
+    message: string,
     status: number,
     data: any = undefined,
     error: any = undefined

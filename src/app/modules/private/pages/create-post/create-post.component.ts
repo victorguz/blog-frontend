@@ -186,21 +186,15 @@ export class CreatePostComponent implements OnInit {
     this.form.patchValue({
       publication_date: this.selectedDate || new Date(),
     });
-    const { content, description, ...value } = this.form.getRawValue();
-    this.postsService
-      .create({
-        ...value,
-        description: friendlyString(description),
-        content: JSON.stringify(friendlyObject(content)),
-      })
-      .subscribe({
-        next: (result) => {
-          console.log(result);
-        },
-        error: (err) => {
-          this.helpers.notificaciones.notificarError(err?.message);
-        },
-      });
+    const value = this.form.getRawValue();
+    this.postsService.create(value).subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: (err) => {
+        this.helpers.notificaciones.notificarError(err?.message);
+      },
+    });
   }
 
   cambiarBorrador() {

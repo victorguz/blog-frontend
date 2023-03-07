@@ -277,136 +277,6 @@ export function blobToBase64(blob: Blob) {
 }
 
 /**
- * @description convierte un numero de segundos en un formato de hora
- * @param segundos numero de segundos
- * @param maxValue segundos maximos
- * @returns
- */
-export function secondsToHourFormat(segundos: number) {
-  segundos = segundos ? segundos : 0;
-  let hours: any = Math.floor(segundos / 3600);
-  let minutes: any = Math.floor((segundos - hours * 3600) / 60);
-  let seconds: any = segundos - hours * 3600 - minutes * 60;
-  let miliseconds: any = Math.round((seconds - Math.floor(seconds)) * 1000);
-
-  const formatNumber = (n: number) => {
-    return n < 10 ? '0' + n : n;
-  };
-
-  return (
-    formatNumber(hours) +
-    ':' +
-    formatNumber(minutes) +
-    ':' +
-    formatNumber(Math.floor(seconds)) +
-    ':' +
-    formatNumber(miliseconds)
-  );
-}
-
-/**
- * @description valida los campos segun el nombre y las condiciones del formulario
- * @param name nombre del campo en el formulario
- * @returns
- */
-export function isRequiredField(form: FormGroup, name: string) {
-  const invalid = form.get(name)?.invalid;
-  if (invalid) {
-    const dirty = form.get(name)?.dirty;
-    const empty =
-      typeof form.get(name)?.value == 'string' && form.get(name)?.value == '';
-    if (empty) {
-      return dirty;
-    } else {
-      return true;
-    }
-  } else {
-    return false;
-  }
-}
-
-export function findInvalidControls(form: FormGroup) {
-  const invalid: any[] = [];
-  const controls = form.controls;
-  for (const name in controls) {
-    if (controls[name].invalid) {
-      invalid.push({ name, errors: controls[name].errors });
-    }
-  }
-  return invalid;
-}
-
-export function stringToBase64(cad: string) {
-  return Buffer.from(cad).toString('base64');
-}
-
-/**
- * Obtiene el dominio del cliente (básicamente el dominio de la url)
- * @returns el dominio del cliente
- */
-export function getClientDomain() {
-  return location.origin;
-}
-
-export function isLocalhost() {
-  return location.origin.includes('localhost');
-}
-
-/**
- * RN06: Duracion video en minutos x 60 = Total duración por capítulo en segundos
- * Total duración por capítulo en segundos x Cantidad de capítulos = Duración total del proyecto en segundos
- * Total duración capítulo x Frame rate = Cantidad de frames por capítulo
- * Duración total del proyecto x Frame rate = Cantidad total de frames del proyecto
- * @param value
- */
-export function calcularDuracionProyecto(value: {
-  duracion: number;
-  numeroCapitulos: number;
-  cuadrosPorSegundo: number;
-}) {
-  const { duracion, numeroCapitulos, cuadrosPorSegundo } = value;
-
-  if (duracion && numeroCapitulos && cuadrosPorSegundo) {
-    const segundosVideo = duracion * 60; //duracion total por capitulo
-    const segundosProyecto = segundosVideo * numeroCapitulos; //duracion total del proyecto
-    // const framesVideo = segundosVideo * cuadrosPorSegundo; //frames por video
-    const framesProyecto = segundosProyecto * cuadrosPorSegundo; //total frames del proyecto
-    return { segundosProyecto, cuadrosPorSegundo, framesProyecto };
-  }
-  return null;
-}
-/**
- * Al ingresar el nombre,  tipo  de proyecto  y  temporada se muestra  mensaje indicando
- * el Nombre  con  el que  se visualizará el proyecto.Ejpara  el proyecto serie  animada Flash
- * Light con  temporada  1 el  nombre  sería  FL_T01. Para el proyecto de película La nutria
- * Sagaz que no tiene temporada el nombre sería el mismo La nutria Sagaz
- * @param value
- * @returns
- */
-export function nombreProyectoTemporada(value: {
-  nombre: string;
-  temporada: number;
-  capitulo: number;
-}) {
-  let { nombre, temporada, capitulo } = value;
-
-  if (nombre && (temporada || capitulo)) {
-    const newTemporada = temporada
-      ? (temporada > 9 ? '' : '0') + temporada
-      : '';
-    const newCapitulo = capitulo ? (capitulo > 9 ? '' : '0') + capitulo : '';
-    const nuevoNombre = nombre
-      .trim()
-      .split(' ')
-      .map((value) => value[0])
-      .join('');
-    return `${nuevoNombre}${newTemporada ? '_T' + newTemporada : ''}${
-      newCapitulo ? '_C' + newCapitulo : ''
-    }`.toUpperCase();
-  }
-  return nombre;
-}
-/**
  * Crea una fecha con los dias de mas o menos indicados
  * @param days dias indicados
  * @returns
@@ -523,19 +393,17 @@ export function friendlyString(cad: any) {
   });
 }
 export function friendlyObject(obj: any) {
-  
-  const newObj = cloneObject(obj);
-  for (const key in newObj) {
-    if (Object.prototype.hasOwnProperty.call(newObj, key)) {
-      const element = newObj[key];
-      if (typeof newObj[key] == 'object') {
-        newObj[key] = friendlyObject(newObj[key]);
+  obj = cloneObject(obj);
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (typeof obj[key] == 'object') {
+        obj[key] = friendlyObject(obj[key]);
       } else {
-        newObj[key] = friendlyString(newObj[key]);
+        obj[key] = friendlyString(obj[key]);
       }
     }
   }
-  return newObj;
+  return obj;
 }
 export function scrollToElement(querySelector: string) {
   document.querySelector(querySelector)!.scrollIntoView({

@@ -21,6 +21,12 @@ export interface ModalOptions {
   icon?: string;
 }
 
+export interface ArchivosInterface {
+  nombre: string;
+  file: File;
+  base64: string;
+  extensionArchivo: string;
+}
 export interface SpinnerMessageOptions {
   message: string;
   title?: string;

@@ -1,6 +1,5 @@
 @import "/src/assets/scss/variables";
-
-.index {
+.post-index {
   position: relative;
 
   display: flex;
@@ -18,7 +17,7 @@
     flex-direction: column;
     padding: 0;
     gap: 0.7rem;
-    margin-left: 1rem;
+    margin-right: 1rem;
     width: calc(250px - 1rem);
 
     @media screen and (max-width: 992px) {

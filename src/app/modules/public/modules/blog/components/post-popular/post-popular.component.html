@@ -1,7 +1,14 @@
-<div class="d-flex flex-column">
-  <h5>Temas populares</h5>
-  <a>Tema 1</a>
-  <a>Tema 2</a>
-  <a>Tema 3</a>
-  <a>Tema 4</a>
-</div>
+<section class="post-index">
+  <div class="lista text-muted unselectable">
+    <h5>Temas populares</h5>
+    <a *ngFor="let item of posts" [routerLink]="['./']">
+      <div>
+        <span class="title">
+          {{ item.name }}
+        </span>
+        <img [src]="item.image.base64" alt="img-preview" class="img" />
+      </div>
+      <small class="text-muted">{{ item.created_date | date }}</small>
+    </a>
+  </div>
+</section>

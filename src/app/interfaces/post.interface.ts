@@ -1,6 +1,8 @@
 import { FormControl } from '@angular/forms';
+import { OutputData } from '@editorjs/editorjs';
 import { LOGICAL_STATUS } from '../core/constants.config';
 import { FindDto } from '../core/dtos/find.dto';
+import { ArchivosInterface } from '../core/interfaces/shared.interfaces';
 
 export interface UpdatePost {
   id?: number;
@@ -39,8 +41,8 @@ export interface Post {
   id: number;
   name: string;
   description: string;
-  content: string;
-  image: string;
+  content: OutputData;
+  image: ArchivosInterface;
   tags: string;
   category: string;
   created_date: Date;

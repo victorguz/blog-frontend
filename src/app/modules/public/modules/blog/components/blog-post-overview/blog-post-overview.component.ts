@@ -37,7 +37,7 @@ export class BlogPostOverviewComponent implements OnInit {
     this.postsService.findAll(body).subscribe({
       next: (result) => {
         if (result.success) {
-          this.posts = result.data;
+          this.posts = result.data || [];
           this.offset += limit ? limit : 0;
         }
       },
