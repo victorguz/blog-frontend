@@ -1,5 +1,12 @@
-.public-content {
-  * {
-    transition: top 1s;
+#public-content {
+}
+
+#public-navbar {
+  position: fixed;
+  width: 100%;
+  transition: top 0.3s;
+
+  @media screen and (max-width: 992px) {
+    position: inherit;
   }
 }
