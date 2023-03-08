@@ -16,6 +16,7 @@ body {
   height: 100%;
 }
 body {
+  position: relative;
   background: url("/assets/images/svg/mask.svg") no-repeat top center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -46,10 +47,10 @@ body {
   }
 
   p,
-  p *  {
+  p * {
     font-size: 20px;
 
-    &:not(a){
+    &:not(a) {
       color: $dark;
     }
     @media screen and (max-width: 768px) {

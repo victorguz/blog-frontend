@@ -13,8 +13,9 @@ export class AppComponent implements AfterViewInit {
   }
   onScrollDown() {
     let prevScrollpos = window.scrollY;
-    if (window.innerWidth>992) {
+    console.log(prevScrollpos);
 
+    if (window.innerWidth > 992) {
       const interval = setInterval(() => {
         let navbar = document.getElementById('public-navbar')!;
         let publicContent = document.getElementById('public-content')!;
@@ -25,10 +26,10 @@ export class AppComponent implements AfterViewInit {
             let currentScrollPos = window.scrollY;
             if (prevScrollpos > currentScrollPos) {
               navbar.style.top = '0';
-              publicContent.style.marginTop = '92px';
+              publicContent.style.paddingTop = '92px';
             } else {
               navbar.style.top = '-92px';
-              publicContent.style.marginTop = '1rem';
+              publicContent.style.paddingTop = '1rem';
             }
             prevScrollpos = currentScrollPos;
           };
