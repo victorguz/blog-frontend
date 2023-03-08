@@ -28,17 +28,17 @@ export class BlogPostOverviewComponent implements OnInit {
     });
   }
 
-  findPosts(limit: number = 0) {
+  findPosts() {
     const body: SelectPost = {
       category: this.category,
-      limit: limit,
+      limit: this.limit,
       offset: this.offset,
     };
     this.postsService.findAll(body).subscribe({
       next: (result) => {
         if (result.success) {
           this.posts = result.data || [];
-          this.offset += limit ? limit : 0;
+          this.offset += this.limit || 0;
         }
       },
       error: (err) => {},

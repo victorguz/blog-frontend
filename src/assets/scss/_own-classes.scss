@@ -41,18 +41,14 @@ hr {
 .background {
   position: relative;
 
-  .container {
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 
+  .content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-
-    .content {
-      display: flex;
-      flex-direction: column;
-    }
   }
 }
 

@@ -6,6 +6,10 @@
   flex-direction: column;
   width: 400px;
 
+  @media screen and (max-width: 1140px) {
+    width: 300px;
+  }
+
   @media screen and (max-width: 992px) {
     width: 100%;
   }
@@ -24,6 +28,10 @@
       padding: 0;
       gap: 2rem;
       width: calc(400px - 1rem);
+
+      @media screen and (max-width: 1140px) {
+        width: 300px;
+      }
 
       @media screen and (max-width: 992px) {
         width: 100%;

@@ -6,7 +6,7 @@
   flex-direction: column;
   width: 250px;
 
-  @media screen and (max-width: 992px) {
+  @media screen and (max-width: 1140px) {
     width: 100%;
   }
 
@@ -20,7 +20,7 @@
     margin-right: 1rem;
     width: calc(250px - 1rem);
 
-    @media screen and (max-width: 992px) {
+    @media screen and (max-width: 1140px) {
       position: inherit;
       width: 100%;
     }
