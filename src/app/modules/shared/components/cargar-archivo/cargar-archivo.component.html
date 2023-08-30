@@ -1,0 +1,51 @@
+<div
+  class="position-relative d-flex justify-content-center align-items-center {{
+    class
+  }}"
+  [ngClass]="{ 'file-loader-disabled': disabled }"
+>
+
+  <input
+    class="files"
+    type="file"
+    [accept]="tiposPermitidos"
+    (change)="capturarArchivo()"
+    (click)="borrarArchivo()"
+    #inputFile
+  />
+
+  <div class="texto-interno">
+    <ng-container *ngIf="!isBadFile && !file">
+      <div class="text-muted">
+        Arrastrar y soltar archivo o
+        <span class="text-primary fw-semibold text-decoration-underline">
+          buscar archivo*
+        </span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isBadFile && file">
+      <small class="with-file text-primary">
+        {{ fileName }}
+      </small>
+    </ng-container>
+    <ng-container *ngIf="isBadFile">
+      <small
+        *ngIf="errorMessage"
+        class="text-danger"
+        [innerHTML]="errorMessage"
+      ></small>
+      <small *ngIf="!errorMessage" class="text-danger">
+        El archivo no debe superar el tamaño de
+        <strong>{{ maxFileBytes / 1000000 }} mb</strong> y debe ser de tipo
+        <strong>{{ tiposPermitidos | lowercase }}</strong>
+      </small>
+    </ng-container>
+    <ng-container *ngIf="isBadFile || file">
+      <small class="text-muted">
+        Arrastrar y soltar archivo o
+        <strong>buscar archivo</strong>
+        nuevamente
+      </small>
+    </ng-container>
+  </div>
+</div>

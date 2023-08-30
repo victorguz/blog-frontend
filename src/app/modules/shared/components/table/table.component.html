@@ -1,0 +1,186 @@
+<div class="table-container" #tableContainer>
+  <table
+    class="table table-striped"
+    [ngClass]="{ 'table-responsive': isTableResponsive }"
+    mat-table
+    [dataSource]="dataSource"
+    #table
+  >
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="h-100 w-100 text-center">No se encontraron datos</div>
+      </td>
+    </tr>
+    <ng-container
+      matColumnDef="{{ column.name }}"
+      *ngFor="let column of columns"
+    >
+      <th mat-header-cell *matHeaderCellDef class="pr-3 pl-3">
+        <span
+          class="column-header {{ column.titleClass }} {{
+            column.titleAlignment
+          }}"
+        >
+          {{ column.title }}
+        </span>
+      </th>
+      <td
+        mat-cell
+        class="p-1 gap-1"
+        *matCellDef="let item"
+        [ngClass]="{
+          'text-break': render(column, item).length > 43,
+          'text-wrap': render(column, item).length > 20,
+          'text-nowrap': render(column, item).length <= 20
+        }"
+      >
+        <span class="mobile-label {{ column.titleClass }}">
+          {{ column.title }}:
+        </span>
+
+        <div class="column-render {{ column.contentAlignment }}">
+          <div
+            class="d-flex align-items-center h-100 gap-2"
+            *ngIf="column.name == 'actions' && actions && actions.length > 0"
+          >
+            <button
+              *ngFor="let action of actions"
+              [matTooltip]="action.tooltipText || ''"
+              [matTooltipPosition]="action.tooltipOrientation || 'above'"
+              matTooltipHideDelay="1"
+              matTooltipShowDelay="1000"
+              matTooltipClass="tooltip-item"
+              [disabled]="isDisabledAction(action, item)"
+              [class]="
+                'btn btn-icon rounded-3 d-flex align-items-center gap-3 ' +
+                getButtonClass(item, action.buttonClass)
+              "
+              [ngClass]="{
+                'btn-disabled': isDisabledAction(action, item),
+                'btn-texto': getText(item, action.texto) ? true : false
+              }"
+              (click)="
+                !isDisabledAction(action, item) ? action.accion(item) : ''
+              "
+            >
+              <img *ngIf="action.imagen" [src]="getIcon(item, action.imagen)" alt="img" />
+              <mat-icon
+                *ngIf="action.icon"
+                [class]="action.iconClass || 'material-icons-outlined'"
+              >
+                {{ getIcon(item, action.icon) }}
+              </mat-icon>
+              <span *ngIf="action.texto">
+                {{ getText(item, action.texto) }}
+              </span>
+            </button>
+          </div>
+
+          <span
+            *ngIf="column.name != 'actions'"
+            class="content {{
+              column.columnClass
+                ? column.columnClass(item[column.name], item)
+                : ''
+            }}"
+            [ngClass]="{
+              'd-flex': hasLeftItems(column) ? true : false,
+              'align-items-center': hasLeftItems(column) ? true : false,
+              'gap-2': hasLeftItems(column) ? true : false
+            }"
+          >
+            <div
+              class="check form-check"
+              *ngIf="hasCheck(column, item)"
+              (click)="selectItem(item)"
+            >
+              <input
+                class="form-check-input"
+                [type]="multipleSelection ? 'checkbox' : 'radio'"
+                [checked]="selected.has(item)"
+              />
+            </div>
+
+            <div
+              class="flag"
+              *ngIf="column.hasFlag && column.hasFlag(item[column.name], item)"
+            >
+              <mat-icon>flag</mat-icon>
+            </div>
+
+            <div
+              *ngIf="column.statusClass"
+              class="circle-status {{
+                column.statusClass(item[column.name], item)
+              }}"
+            ></div>
+
+            {{ render(column, item) }}
+
+            <div
+              *ngIf="column.itemList && column.itemList(item).length > 0"
+              class="item-list"
+            >
+              <mat-icon class="icon-list-expanded" (click)="expandItem(item,column)">
+                {{ hasExpandedItem(item,column) ? "expand_less" : "expand_more" }}
+              </mat-icon>
+            </div>
+          </span>
+        </div>
+        <div
+          class="list-expanded"
+          *ngIf="column.itemList && hasExpandedItem(item,column)"
+        >
+          <div class="item" *ngFor="let listItem of column.itemList(item)">
+            <span *ngIf="listItem.tooltip" class="tooltip-item">
+              {{ listItem.tooltip }}
+            </span>
+            <mat-icon
+              class="initial-icon {{
+                listItem.iconClass || 'bg-warning text-white'
+              }}"
+            >
+              {{ listItem.icon || "priority_high" }}
+            </mat-icon>
+            <span
+              class="{{ listItem.textClass || 'text-muted' }}"
+              (click)="
+                listItem.action && !listItem.action.disabled
+                  ? listItem.action.accion(item)
+                  : ''
+              "
+            >
+              {{ listItem.text }}
+            </span>
+
+            <mat-icon
+              *ngIf="listItem.action && listItem.action.accion"
+              class="action-icon material-icons-outlined {{
+                listItem.action.iconClass || 'text-muted'
+              }}"
+              [ngClass]="{ 'bg-light': listItem.action.disabled }"
+            >
+              {{ listItem.action.icon }}
+            </mat-icon>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [ngClass]="{ 'selected-row': selected.has(row) }"
+    ></tr>
+  </table>
+  <mat-paginator
+    #paginator
+    [pageSizeOptions]="
+      pageSizeOptions.length > 0 ? pageSizeOptions : [5, 10, 20]
+    "
+    showFirstLastButtons
+    *ngIf="showPaginator"
+  >
+  </mat-paginator>
+</div>

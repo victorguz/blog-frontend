@@ -1,0 +1,42 @@
+<section
+  class="d-flex flex-column align-items-center justify-content-center mt-3 mb-5"
+>
+  <div class="buttons-container">
+    <div class="buttons gap-3">
+      <a
+        *ngFor="let item of categories"
+        class="btn btn-transparent"
+        [routerLink]="[item.route, item.category]"
+        routerLinkActive="btn-outline-primary bg-white"
+        [routerLinkActiveOptions]="{
+          matrixParams: 'exact',
+          queryParams: 'ignored',
+          paths: 'exact',
+          fragment: 'ignored'
+        }"
+      >
+        {{ item.name }}
+      </a>
+      <button mat-icon-button class="btn" (click)="showSearch = !showSearch">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="input-search"
+    #blogSearch
+    [ngStyle]="{
+      opacity: showSearch ? 1 : 0
+    }"
+  >
+    <mat-icon>search</mat-icon>
+    <input
+      type="text"
+      class="form-control bg-transparent border-0"
+      placeholder="¿Qué te gustaría encontrar?"
+      [formControl]="formControl"
+    />
+    <mat-icon>cancel</mat-icon>
+  </div>
+</section>

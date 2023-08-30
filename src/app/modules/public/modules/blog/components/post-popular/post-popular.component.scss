@@ -1,0 +1,81 @@
+@import "/src/assets/scss/variables";
+.post-index {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+
+  @media screen and (max-width: 1140px) {
+    width: 300px;
+  }
+
+  @media screen and (max-width: 992px) {
+    width: 100%;
+  }
+
+  .content {
+    position: fixed;
+    margin-left: 1rem;
+
+    @media screen and (max-width: 992px) {
+      position: inherit;
+    }
+
+    .lista {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      gap: 2rem;
+      width: calc(400px - 1rem);
+
+      @media screen and (max-width: 1140px) {
+        width: 300px;
+      }
+
+      @media screen and (max-width: 992px) {
+        width: 100%;
+
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 1rem;
+      }
+
+      @media screen and (max-width: 769px) {
+        grid-template-columns: auto;
+      }
+
+      a {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        transition: all ease-in 0.2s;
+        gap: 0.3rem;
+
+        background-color: rgba($color: #fff, $alpha: 0.3);
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        &:hover {
+          background-color: rgba($color: #fff, $alpha: 0.4);
+        }
+        div {
+          display: flex;
+          width: 100%;
+          gap: 1rem;
+
+          .title {
+            color: black;
+            font-weight: 600;
+          }
+
+          img {
+            min-width: 56px;
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
+}

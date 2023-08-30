@@ -19,10 +19,11 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["es2022", "dom", "ESNext.String"],
+    "noImplicitAny": false,
+    "paths": {
+      "crypto": ["node_modules/crypto-js"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

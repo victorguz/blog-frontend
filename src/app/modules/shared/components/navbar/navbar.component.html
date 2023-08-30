@@ -1,0 +1,31 @@
+<nav
+  class="d-flex align-items-center justify-content-sm-between justify-content-center flex-column flex-sm-row p-3 w-100 mb-3"
+>
+  <a
+    routerLink="/profile"
+    class="d-flex align-items-center gap-3 flex-column flex-sm-row mb-3 mb-sm-0"
+  >
+    <img
+      src="assets/images/png/profile.png"
+      alt="profile-img"
+      class="img-fluid"
+    />
+    <div class="d-flex flex-column text-center text-sm-start">
+      <span class="text-dark">Victor Guzmán Berrio</span>
+      <small>Software Engineer</small>
+    </div>
+  </a>
+
+  <div class="d-flex align-items-center gap-3">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="/private/post/new">
+        <mat-icon>add</mat-icon> Write post
+      </a>
+    </mat-menu>
+    <a class="btn btn-transparent" routerLink="/profile">Profile</a>
+    <a class="btn btn-primary">Contact me</a>
+  </div>
+</nav>

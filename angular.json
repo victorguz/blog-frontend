@@ -25,7 +25,72 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "crypto",
+              "html2canvas",
+              "validator/lib/contains",
+              "validator/lib/matches",
+              "validator/lib/isLength",
+              "validator/lib/isVariableWidth",
+              "validator/lib/isURL",
+              "validator/lib/isUppercase",
+              "validator/lib/isUUID",
+              "validator/lib/isSurrogatePair",
+              "validator/lib/isSemVer",
+              "validator/lib/isRgbColor",
+              "validator/lib/isRFC3339",
+              "validator/lib/isPostalCode",
+              "validator/lib/isPort",
+              "validator/lib/isPassportNumber",
+              "validator/lib/isOctal",
+              "validator/lib/isNumeric",
+              "validator/lib/isMultibyte",
+              "validator/lib/isMimeType",
+              "validator/lib/isMagnetURI",
+              "validator/lib/isMACAddress",
+              "validator/lib/isLowercase",
+              "validator/lib/isLocale",
+              "validator/lib/isJWT",
+              "validator/lib/isJSON",
+              "validator/lib/isIdentityCard",
+              "validator/lib/isISSN",
+              "validator/lib/isISRC",
+              "validator/lib/isISO31661Alpha3",
+              "validator/lib/isISO31661Alpha2",
+              "validator/lib/isISO8601",
+              "validator/lib/isISIN",
+              "validator/lib/isISBN",
+              "validator/lib/isIP",
+              "validator/lib/isIBAN",
+              "validator/lib/isHexadecimal",
+              "validator/lib/isHexColor",
+              "validator/lib/isHalfWidth",
+              "validator/lib/isHash",
+              "validator/lib/isHSL",
+              "validator/lib/isFullWidth",
+              "validator/lib/isFQDN",
+              "validator/lib/isEthereumAddress",
+              "validator/lib/isEmail",
+              "validator/lib/isEAN",
+              "validator/lib/isDecimal",
+              "validator/lib/isDataURI",
+              "validator/lib/isCurrency",
+              "validator/lib/isCreditCard",
+              "validator/lib/isByteLength",
+              "validator/lib/isBtcAddress",
+              "validator/lib/isBoolean",
+              "validator/lib/isBase64",
+              "validator/lib/isBase32",
+              "validator/lib/isBIC",
+              "validator/lib/isAscii",
+              "validator/lib/isAlphanumeric",
+              "validator/lib/isAlpha",
+              "validator/lib/isDivisibleBy",
+              "validator/lib/isLatLong",
+              "validator/lib/isMobilePhone",
+              "validator/lib/isMongoId"
+            ]
           },
           "configurations": {
             "production": {
@@ -41,7 +106,13 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prd.ts"
+                }
+              ]
             },
             "development": {
               "buildOptimizer": false,
@@ -49,13 +120,7 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "namedChunks": true
             },
             "qa": {
               "buildOptimizer": false,
@@ -113,22 +178,22 @@
           },
           "configurations": {
             "production": {
-              "outputHashing": "media"
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prd.ts"
+                }
+              ]
             },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": true,
               "extractLicenses": false,
-              "vendorChunk": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
-            }
-            ,"qa": {
+              "vendorChunk": true
+            },
+            "qa": {
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": true,
